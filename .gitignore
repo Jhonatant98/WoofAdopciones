@@ -1,0 +1,77 @@
+# .NET and Visual Studio files
+.vscode/
+bin/
+obj/
+*.suo
+*.user
+*.sln.iml
+
+# User-specific files
+*.suo
+*.user
+*.userprefs
+*.sln.docstates
+
+# NuGet packages
+/packages/
+*.nupkg
+# The packages folder can be ignored because it will be rebuilt from the .csproj files
+# Usually, these are entries to .gitignore file per project
+
+# Rider-specific files
+.idea/
+
+# User-specific files
+*.suo
+*.user
+*.userprefs
+*.sln.docstates
+
+# Rider folders
+.idea/
+.ideainspection/
+
+# Visual Studio for Mac
+.vscode/
+.idea/
+.ideainspection/
+
+# User-specific files
+*.suo
+*.user
+*.userprefs
+*.sln.docstates
+
+# Rider folders
+.idea/
+.ideainspection/
+
+# Visual Studio for Mac
+.vscode/
+.idea/
+.ideainspection/
+
+# User-specific files
+*.suo
+*.user
+*.userprefs
+*.sln.docstates
+
+# Rider folders
+.idea/
+.ideainspection/
+
+# Visual Studio for Mac
+.vscode/
+.idea/
+.ideainspection/
+
+# User-specific files
+*.suo
+*.user
+*.userprefs
+*.sln.docstates
+
+# Rider folders
+.idea/
+.ideainspection/
