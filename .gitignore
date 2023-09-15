@@ -75,3 +75,6 @@ obj/
 # Rider folders
 .idea/
 .ideainspection/
+
+# Carpeta de caché de Visual Studio
+.vs/
