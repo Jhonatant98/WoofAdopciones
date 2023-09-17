@@ -13,6 +13,7 @@ namespace WoofAdopciones.Backend.Data
         public DbSet<Pet> Pets { get; set; }
         public DbSet<Country> Countries { get; set; }
         public DbSet<Category> Categories { get; set; }
+        public object States { get; internal set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
