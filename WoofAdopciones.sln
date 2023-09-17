@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34009.444
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WoofAdopciones.Shared", "WoofAdopciones.Shared\WoofAdopciones.Shared.csproj", "{352F76E7-EF7F-4B5C-869C-D8D9D2514223}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WoofAdopciones.Shared", "WoofAdopciones.Shared\WoofAdopciones.Shared.csproj", "{352F76E7-EF7F-4B5C-869C-D8D9D2514223}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WoofAdopciones.Backend", "WoofAdopciones.Backend\WoofAdopciones.Backend.csproj", "{65F69E38-524B-4DC8-BBD7-51FE78DA39F5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WoofAdopciones.Backend", "WoofAdopciones.Backend\WoofAdopciones.Backend.csproj", "{65F69E38-524B-4DC8-BBD7-51FE78DA39F5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WoofAdopciones.Frontend", "WoofAdopciones.Frontend\WoofAdopciones.Frontend.csproj", "{C120276C-7AB1-41B7-A72E-8AE9B883C697}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WoofAdopciones.Frontend", "WoofAdopciones.Frontend\WoofAdopciones.Frontend.csproj", "{C120276C-7AB1-41B7-A72E-8AE9B883C697}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

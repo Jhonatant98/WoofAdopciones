@@ -1,0 +1,67 @@
+﻿@page "/pets/PetEdit/{Id:int}"
+@inject IRepository repository
+@inject NavigationManager navigationManager
+@inject SweetAlertService sweetAlertService
+
+
+<h3>Editar Mascota</h3>
+
+@if (pet is null)
+{
+    <Loading />
+}
+else
+{
+    <PetForm @ref="petForm" Pet="pet" OnValidSubmit="SaveAsync" ReturnAction="Return" />
+}
+
+
+@code {
+    private PetForm? petForm;
+    private Pet? pet;
+
+    [Parameter]
+    public int Id { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        var response = await repository.GetAsync<Pet>($"/api/Pets/{Id}");
+        if (response.Error)
+        {
+            if (response.HttpResponseMessage.StatusCode == HttpStatusCode.NotFound)
+            {
+                Return();
+            }
+            var message = await response.GetErrorMessageAsync();
+            await sweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+            return;
+        }
+        pet = response.Response;
+    }
+
+    private async Task SaveAsync()
+    {
+        var response = await repository.PutAsync($"/api/Pets", pet);
+        if (response.Error)
+        {
+            var message = await response.GetErrorMessageAsync();
+            await sweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+            return;
+        }
+        Return();
+        var toast = sweetAlertService.Mixin(new SweetAlertOptions
+            {
+                Toast = true,
+                Position = SweetAlertPosition.BottomEnd,
+                ShowConfirmButton = true,
+                Timer = 3000
+            });
+        await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Cambios guardados con éxito.");
+    }
+
+    private void Return()
+    {
+        petForm!.FormPostedSuccessfully = true;
+        navigationManager.NavigateTo("/Pets");
+    }
+}

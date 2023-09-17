@@ -1,0 +1,89 @@
+﻿@page "/ordertypes"
+@inject IRepository repository
+@inject SweetAlertService sweetAlertService
+
+<h3>Tipos de solicitudes</h3>
+
+<a href="/ordertypes/create" class="btn btn-primary mt-3">Nuevo tipo de solicitud</a>
+
+
+<GenericList MyList="orderTypes">
+    <Body>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Codigo</th>
+                    <th>Nombre</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var orderType in orderTypes!)
+                {
+                    <tr>
+                        <td>@orderType.Id</td>
+                        <td>@orderType.Name</td>
+                        <td>
+                            <a class="btn btn-warning btn-sm" href="/ordertypes/OrderTypeEdit/@orderType.Id">Editar</a>
+                            <button class="btn btn-danger btn-sm" @onclick=@(() => DeleteAsync(orderType))>Borrar</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </Body>
+</GenericList>
+        @code {
+        private List<OrderType>? orderTypes;
+        protected override async Task OnInitializedAsync()
+        {
+            await LoadAsync();
+        }
+
+        private async Task LoadAsync()
+        {
+        var response = await repository.GetAsync<List<OrderType>>("api/OrderType");
+            if (response.Error)
+            {
+                var message = await response.GetErrorMessageAsync();
+                await sweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+                return;
+            }
+
+            orderTypes = response.Response;
+        }
+        protected async Task DeleteAsync(OrderType orderType)
+        {
+            var result = await sweetAlertService.FireAsync(new SweetAlertOptions
+            {
+                Title = "Confirmación",
+                Text = $"¿Esta seguro que quieres borrar el tipo de solicitud: {orderType.Name}?",
+                Icon = SweetAlertIcon.Question,
+                ShowCancelButton = true
+            });
+
+            var confirm = string.IsNullOrEmpty(result.Value);
+            if (confirm)
+            {
+                return;
+            }
+
+        var response = await repository.DeleteAsync($"api/OrderType/{orderType.Id}");
+            if (response.Error)
+            {
+                var message = await response.GetErrorMessageAsync();
+                await sweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+                return;
+            }
+            await LoadAsync();
+            var toast = sweetAlertService.Mixin(new SweetAlertOptions
+            {
+                Toast = true,
+                Position = SweetAlertPosition.BottomEnd,
+                ShowConfirmButton = true,
+                Timer = 3000
+            });
+            await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Registro borrado con éxito.");
+        }
+
+}
