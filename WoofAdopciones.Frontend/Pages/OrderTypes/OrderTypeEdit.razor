@@ -1,31 +1,29 @@
-﻿@page "/pets/PetEdit/{Id:int}"
+﻿@page "/ordertypes/OrderTypeEdit/{Id:int}"
 @inject IRepository repository
 @inject NavigationManager navigationManager
 @inject SweetAlertService sweetAlertService
 
+<h3>Editar tipo de solicitud</h3>
 
-<h3>Editar Mascota</h3>
-
-@if (pet is null)
+@if (orderType is null)
 {
     <Loading />
 }
 else
 {
-    <PetForm @ref="petForm" Pet="pet" OnValidSubmit="SaveAsync" ReturnAction="Return" />
+    <OrderTypeForm @ref="orderTypeForm" OrderType="orderType" OnValidSubmit="SaveAsync" ReturnAction="Return" />
 }
 
-
 @code {
-    private PetForm? petForm;
-    private Pet? pet;
+    private OrderTypeForm? orderTypeForm;
+    private OrderType? orderType;
 
     [Parameter]
     public int Id { get; set; }
 
     protected override async Task OnParametersSetAsync()
     {
-        var response = await repository.GetAsync<Pet>($"/api/Pets/{Id}");
+        var response = await repository.GetAsync<OrderType>($"/api/OrderType/{Id}");
         if (response.Error)
         {
             if (response.HttpResponseMessage.StatusCode == HttpStatusCode.NotFound)
@@ -36,12 +34,12 @@ else
             await sweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
             return;
         }
-        pet = response.Response;
+        orderType = response.Response;
     }
 
     private async Task SaveAsync()
     {
-        var response = await repository.PutAsync($"/api/Pets", pet);
+        var response = await repository.PutAsync($"/api/OrderType", orderType);
         if (response.Error)
         {
             var message = await response.GetErrorMessageAsync();
@@ -61,7 +59,7 @@ else
 
     private void Return()
     {
-        petForm!.FormPostedSuccessfully = true;
-        navigationManager.NavigateTo("/Pets");
+        orderTypeForm!.FormPostedSuccessfully = true;
+        navigationManager.NavigateTo("/ordertypes");
     }
 }
