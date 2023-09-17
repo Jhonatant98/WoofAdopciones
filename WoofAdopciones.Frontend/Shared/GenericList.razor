@@ -1,41 +1,38 @@
 ﻿@typeparam Titem
 
-@if (MyList is null)
+@if(MyList is null)
 {
-    @if (Loading is null)
+    @if(Loading is null)
     {
-   <Loading/>
+        <Loading/>
     }
     else
     {
         @Loading
     }
-
 }
-else if (MyList.Count == 0)
+else if(MyList.Count == 0)
 {
-    @if (NoRecord is null)
+    @if(NoRecords is null)
     {
         <p>No hay registros..</p>
     }
     else
     {
-    @Loading    
+        @Loading
     }
-}
+} 
 else
 {
-    @Body
+    @Body    
 }
-
-
 
 @code {
     [Parameter]
     public RenderFragment? Loading { get; set; }
 
     [Parameter]
-    public RenderFragment? NoRecord { get; set; }
+    public RenderFragment? NoRecords { get; set; }
 
     [EditorRequired]
     [Parameter]
@@ -44,5 +41,4 @@ else
     [EditorRequired]
     [Parameter]
     public List<Titem> MyList { get; set; } = null!;
-
 }

@@ -4,14 +4,11 @@
 
 <h3>Tipos de solicitudes</h3>
 
+<a href="/ordertypes/create" class="btn btn-primary mt-3">Nuevo tipo de solicitud</a>
+
+
 <GenericList MyList="orderTypes">
-    <NoRecord>
-        <p>Aun no hay tipos de solicitud registrados.</p>
-    </NoRecord>
     <Body>
-        <a href="/ordertypes/create" class="btn btn-primary">Nuevo tipo de solicitud</a>
-
-
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -71,7 +68,7 @@
                 return;
             }
 
-        var response = await repository.DeleteAsync($"api/OrderTypes/{orderType.Id}");
+        var response = await repository.DeleteAsync($"api/OrderType/{orderType.Id}");
             if (response.Error)
             {
                 var message = await response.GetErrorMessageAsync();
