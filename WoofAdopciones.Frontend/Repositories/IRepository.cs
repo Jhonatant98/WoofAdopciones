@@ -1,4 +1,4 @@
-﻿namespace WoofAdopciones.Frontend.Repositories
+namespace Sales.Frontend.Repositories
 {
     public interface IRepository
     {
@@ -13,6 +13,5 @@
         Task<HttpResponseWrapper<object>> PutAsync<T>(string url, T model);
 
         Task<HttpResponseWrapper<TResponse>> PutAsync<T, TResponse>(string url, T model);
-
     }
 }
