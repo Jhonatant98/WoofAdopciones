@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Sales.Shared.Entities;
-using WoofAdopciones.Shared.Entities;
 
 namespace WoofAdopciones.Backend.Data
 {
