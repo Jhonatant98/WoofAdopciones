@@ -1,20 +1,20 @@
-﻿@page "/ordertypes/create"
+﻿@page "/countries/create"
 @inject NavigationManager navigationManager
 @inject IRepository repository
 @inject SweetAlertService sweetAlertService
 
-<h3>Nuevo tipo de solicitud</h3>
 
-<OrderTypeForm @ref="orderTypeForm" OrderType="orderType" OnValidSubmit="CreateAsync" ReturnAction="Return" />
+<h3>Nuevo País</h3>
 
+<CountryForm @ref="countryForm" Country="country" OnValidSubmit="CreateAsync" ReturnAction="Return" />
 
 @code {
-    private OrderType orderType = new();
-    private OrderTypeForm? orderTypeForm;
+    private Country country = new();
+    private CountryForm? countryForm;
 
     private async Task CreateAsync()
     {
-        var response = await repository.PostAsync("/api/OrderType", orderType);
+        var response = await repository.PostAsync("/api/countries", country);
         if (response.Error)
         {
             var message = await response.GetErrorMessageAsync();
@@ -30,13 +30,11 @@
                 Timer = 3000
             });
         await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Registro creado con éxito.");
-
     }
 
     private void Return()
     {
-        orderTypeForm!.FormPostedSuccessfully = true;
-        navigationManager.NavigateTo("/ordertypes");
+        countryForm!.FormPostedSuccessfully = true;
+        navigationManager.NavigateTo("/countries");
     }
-
 }

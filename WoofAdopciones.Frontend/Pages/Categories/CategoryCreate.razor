@@ -1,20 +1,19 @@
-﻿@page "/ordertypes/create"
+﻿@page "/categories/create"
 @inject NavigationManager navigationManager
 @inject IRepository repository
 @inject SweetAlertService sweetAlertService
 
-<h3>Nuevo tipo de solicitud</h3>
+<h3>Nuevo Categoría</h3>
 
-<OrderTypeForm @ref="orderTypeForm" OrderType="orderType" OnValidSubmit="CreateAsync" ReturnAction="Return" />
-
+<CategoryForm @ref="categoryForm" Category="category" OnValidSubmit="CreateAsync" ReturnAction="Return" />
 
 @code {
-    private OrderType orderType = new();
-    private OrderTypeForm? orderTypeForm;
+    private Category category = new();
+    private CategoryForm? categoryForm;
 
     private async Task CreateAsync()
     {
-        var response = await repository.PostAsync("/api/OrderType", orderType);
+        var response = await repository.PostAsync("/api/categories", category);
         if (response.Error)
         {
             var message = await response.GetErrorMessageAsync();
@@ -30,13 +29,11 @@
                 Timer = 3000
             });
         await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Registro creado con éxito.");
-
     }
 
     private void Return()
     {
-        orderTypeForm!.FormPostedSuccessfully = true;
-        navigationManager.NavigateTo("/ordertypes");
+        categoryForm!.FormPostedSuccessfully = true;
+        navigationManager.NavigateTo("/categories");
     }
-
 }

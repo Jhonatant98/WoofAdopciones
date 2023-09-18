@@ -1,6 +1,6 @@
 ﻿<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="">WoofAdopciones.Frontend</a>
+        <a class="navbar-brand" href="">WoofAdopciones</a>
         <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -15,18 +15,22 @@
             </NavLink>
         </div>
         <div class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="oi oi-plus" aria-hidden="true"></span> Counter
+            <NavLink class="nav-link" href="/categories">
+                <span class="oi oi-list" aria-hidden="true"></span> Categorias
             </NavLink>
         </div>
         <div class="nav-item px-3">
-            <NavLink class="nav-link" href="/pets">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Mascotas
-            </NavLink>
+          <NavLink class="nav-link" href="/ordertypes">
+         <span class="oi oi-globe" aria-hidden="true"></span> Tipos de solicitudes
+          </NavLink>
         </div>
         <div class="nav-item px-3">
-            <NavLink class="nav-link" href="/ordertypes">
-                <span class="oi oi-star" aria-hidden="true"></span> Tipos de solicitudes
+           <NavLink class="nav-link" href="/pets">Mascotas
+           </NavLink>
+        </div>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="/countries">
+                <span class="oi oi-globe" aria-hidden="true"></span> Paises
             </NavLink>
         </div>
     </nav>
