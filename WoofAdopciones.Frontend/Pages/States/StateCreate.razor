@@ -1,20 +1,23 @@
-﻿@page "/pets/create"
+﻿@page "/states/create/{CountryId:int}"
 @inject NavigationManager navigationManager
 @inject IRepository repository
 @inject SweetAlertService sweetAlertService
 
-<h3>Nueva mascota</h3>
+<h3>Nuevo Estado/Departamento</h3>
 
-
-<PetForm @ref="petForm" Pet="pet" OnValidSubmit="CreateAsync" ReturnAction="Return" />
+<StateForm @ref="stateForm" State="state" OnValidSubmit="CreateAsync" ReturnAction="Return" />
 
 @code {
-    private Pet pet = new();
-    private PetForm? petForm;
+    private State state = new();
+    private StateForm? stateForm;
+
+    [Parameter]
+    public int CountryId { get; set; }
 
     private async Task CreateAsync()
     {
-        var response = await repository.PostAsync("/api/Pets", pet);
+        state.CountryId = CountryId;
+        var response = await repository.PostAsync("/api/states", state);
         if (response.Error)
         {
             var message = await response.GetErrorMessageAsync();
@@ -30,13 +33,11 @@
                 Timer = 3000
             });
         await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Registro creado con éxito.");
-
     }
 
     private void Return()
     {
-        petForm!.FormPostedSuccessfully = true;
-        navigationManager.NavigateTo("/Pets");
+        stateForm!.FormPostedSuccessfully = true;
+        navigationManager.NavigateTo($"/countries/details/{CountryId}");
     }
-
 }
