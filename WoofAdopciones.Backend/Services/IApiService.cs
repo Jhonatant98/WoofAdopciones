@@ -1,6 +1,6 @@
 ﻿using WoofAdopciones.Shared.Responses;
 
-namespace Sales.Backend.Services
+namespace WoofAdopciones.Backend.Services
 {
     public interface IApiService
     {

@@ -1,19 +1,19 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Sales.Shared.Entities;
 using WoofAdopciones.Backend.Data;
 using WoofAdopciones.Backend.Interfaces;
-using Microsoft.EntityFrameworkCore;
-using Sales.Backend.Data;
+using WoofAdopciones.Shared.Entities;
 
 namespace WoofAdopciones.Backend.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
-    public class StatesController : GenericController<Country>
+    [Route("api/[controller]")]
+    public class StatesController : GenericController<State>
     {
-        private readonly DataContext _context;
 
-        public StatesController(IGenericUnitOfWork<Country> unitOfWork, DataContext context) : base(unitOfWork)
+        private readonly DataContext _context;
+        public StatesController(IGenericUnitOfWork<State> unitOfWork, DataContext context) : base(unitOfWork)
         {
             _context = context;
         }
@@ -29,14 +29,14 @@ namespace WoofAdopciones.Backend.Controllers
         [HttpGet("{id}")]
         public override async Task<IActionResult> GetAsync(int id)
         {
-            var country = await _context.States
-                .Include(s => s.Cities!)
+            var state = await _context.States
+                .Include(s => s.Cities)
                 .FirstOrDefaultAsync(s => s.Id == id);
-            if (country == null)
+            if (state == null)
             {
                 return NotFound();
             }
-            return Ok(country);
+            return Ok(state);
         }
     }
 }

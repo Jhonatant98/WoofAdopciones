@@ -1,16 +1,15 @@
-using Sales.Shared.Entities;
 using Microsoft.EntityFrameworkCore;
-using Sales.Backend.Services;
-using Sales.Shared.Responses;
-using WoofAdopciones.Backend.Data;
+using WoofAdopciones.Shared.Entities;
+using WoofAdopciones.Shared.Responses;
+using WoofAdopciones.Backend.Services;
 
-namespace Sales.Backend.Data
+
+namespace WoofAdopciones.Backend.Data
 {
     public class SeedDb
     {
         private readonly DataContext _context;
         private readonly IApiService _apiService;
-
         public SeedDb(DataContext context, IApiService apiService)
         {
             _context = context;
@@ -21,7 +20,6 @@ namespace Sales.Backend.Data
         {
             await _context.Database.EnsureCreatedAsync();
             await CheckCountriesAsync();
-            await CheckCategoriesAsync();
             await CheckOrderTypeAsync();
         }
 
@@ -39,25 +37,9 @@ namespace Sales.Backend.Data
                 _context.OrderTypes.Add(new OrderType { Name = "Perdida" });
                 _context.OrderTypes.Add(new OrderType { Name = "Entrega Responsable" });
                 _context.OrderTypes.Add(new OrderType { Name = "Voluntario B" });
-
                 await _context.SaveChangesAsync();
             }
         }
-
-        private async Task CheckCategoriesAsync()
-        {
-            if (!_context.Categories.Any())
-            {
-                _context.Categories.Add(new Category { Name = "Calzado" });
-                _context.Categories.Add(new Category { Name = "Deportes" });
-                _context.Categories.Add(new Category { Name = "Mascotas" });
-                _context.Categories.Add(new Category { Name = "Tecnología" });
-                _context.Categories.Add(new Category { Name = "Belleza" });
-                _context.Categories.Add(new Category { Name = "Mac" });
-                await _context.SaveChangesAsync();
-            }
-        }
-
         private async Task CheckCountriesAsync()
         {
             if (!_context.Countries.Any())
@@ -65,11 +47,9 @@ namespace Sales.Backend.Data
                 var responseCountries = await _apiService.GetAsync<List<CountryResponse>>("/v1", "/countries");
                 if (responseCountries.WasSuccess)
                 {
-
                     var countries = responseCountries.Result!;
                     foreach (var countryResponse in countries)
                     {
-
                         var country = await _context.Countries.FirstOrDefaultAsync(c => c.Name == countryResponse.Name!)!;
                         if (country == null)
                         {
@@ -112,12 +92,12 @@ namespace Sales.Backend.Data
                             {
                                 _context.Countries.Add(country);
                                 await _context.SaveChangesAsync();
+
                             }
                         }
                     }
                 }
             }
-
         }
     }
 }

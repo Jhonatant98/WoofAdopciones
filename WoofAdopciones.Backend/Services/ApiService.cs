@@ -1,7 +1,8 @@
-﻿using System.Text.Json;
+﻿using Sales.Backend.Services;
+using System.Text.Json;
 using WoofAdopciones.Shared.Responses;
 
-namespace Sales.Backend.Services
+namespace WoofAdopciones.Backend.Services
 {
     public class ApiService : IApiService
     {

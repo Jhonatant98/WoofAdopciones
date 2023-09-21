@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Sales.Shared.Entities
+
+namespace WoofAdopciones.Shared.Entities
 {
     public class State
     {

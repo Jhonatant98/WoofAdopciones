@@ -1,22 +1,23 @@
-﻿@page "/countries/edit/{Id:int}"
-@inject NavigationManager navigationManager
+﻿@page "/countries/CountryEdit/{Id:int}"
 @inject IRepository repository
+@inject NavigationManager navigationManager
 @inject SweetAlertService sweetAlertService
 
 <h3>Editar País</h3>
 
-@if(country is null)
+@if (country is null)
 {
-    <Loading/>
+    <Loading />
 }
 else
 {
     <CountryForm @ref="countryForm" Country="country" OnValidSubmit="SaveAsync" ReturnAction="Return" />
 }
 
+
 @code {
-    private Country? country;
     private CountryForm? countryForm;
+    private Country? country;
 
     [Parameter]
     public int Id { get; set; }
@@ -28,7 +29,7 @@ else
         {
             if (response.HttpResponseMessage.StatusCode == HttpStatusCode.NotFound)
             {
-                Return();                
+                Return();
             }
             var message = await response.GetErrorMessageAsync();
             await sweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
@@ -39,7 +40,7 @@ else
 
     private async Task SaveAsync()
     {
-        var response = await repository.PutAsync($"/api/countries/{Id}", country);
+        var response = await repository.PutAsync($"/api/countries", country);
         if (response.Error)
         {
             var message = await response.GetErrorMessageAsync();
@@ -62,5 +63,4 @@ else
         countryForm!.FormPostedSuccessfully = true;
         navigationManager.NavigateTo("/countries");
     }
-
 }

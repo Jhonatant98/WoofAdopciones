@@ -3,12 +3,12 @@
 <NavigationLock OnBeforeInternalNavigation="OnBeforeInternalNavigationAsync"></NavigationLock>
 
 <EditForm EditContext="editContext" OnValidSubmit="OnValidSubmit">
-    <DataAnnotationsValidator/>
+    <DataAnnotationsValidator />
     <div class="mb-3">
         <label>País:</label>
         <div>
-            <InputText class="form-control" @bind-Value="@Country.Name"/>
-            <ValidationMessage For="@(() => Country.Name)"/>
+            <InputText class="form-control" @bind-Value="@Country.Name" />
+            <ValidationMessage For="@(() => Country.Name)" />
         </div>
     </div>
     <button class="btn btn-primary" type="submit">Guardar</button>
@@ -26,9 +26,11 @@
     [EditorRequired]
     [Parameter]
     public Country Country { get; set; } = null!;
+
     [EditorRequired]
     [Parameter]
     public EventCallback OnValidSubmit { get; set; }
+
     [EditorRequired]
     [Parameter]
     public EventCallback ReturnAction { get; set; }

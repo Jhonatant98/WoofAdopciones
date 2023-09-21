@@ -1,14 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Sales.Shared.Entities;
 using WoofAdopciones.Backend.Data;
 using WoofAdopciones.Backend.Interfaces;
-using Microsoft.EntityFrameworkCore;
-using Sales.Backend.Data;
+using WoofAdopciones.Shared.Entities;
 
 namespace WoofAdopciones.Backend.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class CountriesController : GenericController<Country>
     {
         private readonly DataContext _context;

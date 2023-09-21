@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using WoofAdopciones.Backend.Interfaces;
 using Sales.Shared.Entities;
+using WoofAdopciones.Backend.Interfaces;
+using WoofAdopciones.Shared.Entities;
 
 namespace WoofAdopciones.Backend.Controllers
 {
