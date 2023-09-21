@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Sales.Shared.Entities;
 using WoofAdopciones.Backend.Data;
 using WoofAdopciones.Backend.Interfaces;
 using WoofAdopciones.Shared.Entities;

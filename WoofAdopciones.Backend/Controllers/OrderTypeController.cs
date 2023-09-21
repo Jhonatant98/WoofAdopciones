@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Sales.Shared.Entities;
 using WoofAdopciones.Backend.Interfaces;
 using WoofAdopciones.Shared.Entities;
 

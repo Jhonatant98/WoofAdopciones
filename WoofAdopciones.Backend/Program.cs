@@ -5,7 +5,6 @@ using WoofAdopciones.Backend.Repositories;
 using WoofAdopciones.Backend.Services;
 using WoofAdopciones.Backend.UnitsOfWork;
 using WoofAdopciones.Backend.Services;
-using Sales.Backend.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 

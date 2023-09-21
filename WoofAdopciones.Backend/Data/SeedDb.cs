@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using WoofAdopciones.Shared.Entities;
 using WoofAdopciones.Shared.Responses;
 using WoofAdopciones.Backend.Services;
@@ -42,7 +42,7 @@ namespace WoofAdopciones.Backend.Data
         }
         private async Task CheckCountriesAsync()
         {
-            if (!_context.Countries.Any())
+           if (!_context.Countries.Any())
             {
                 var responseCountries = await _apiService.GetAsync<List<CountryResponse>>("/v1", "/countries");
                 if (responseCountries.WasSuccess)
@@ -94,7 +94,7 @@ namespace WoofAdopciones.Backend.Data
                                 await _context.SaveChangesAsync();
 
                             }
-                        }
+                      }
                     }
                 }
             }
