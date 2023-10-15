@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using WoofAdopciones.Shared.DTOs;
 using WoofAdopciones.Shared.Entities;
 
 namespace WoofAdopciones.Backend.Helpers
@@ -14,5 +15,9 @@ namespace WoofAdopciones.Backend.Helpers
         Task AddUserToRoleAsync(User user, string roleName);
 
         Task<bool> IsUserInRoleAsync(User user, string roleName);
+
+        Task<SignInResult> LoginAsync(LoginDTO model);
+
+        Task LogoutAsync();
     }
 }
