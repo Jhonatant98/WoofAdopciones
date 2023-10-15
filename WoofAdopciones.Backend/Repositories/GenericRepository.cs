@@ -38,50 +38,25 @@ namespace WoofAdopciones.Backend.Repositories
             }
         }
 
-        public async Task<Response<T>> DeleteAsync(int id)
+        public async Task DeleteAsync(int id)
         {
             var row = await _entity.FindAsync(id);
             if (row != null)
             {
                 _entity.Remove(row);
                 await _context.SaveChangesAsync();
-                return new Response<T>
-                {
-                    WasSuccess = true,
-                };
             }
-            return new Response<T>
-            {
-                WasSuccess = false,
-                Message = "Registro no encontrado"
-            };
         }
 
-        public async Task<Response<T>> GetAsync(int id)
+        public async Task<T> GetAsync(int id)
         {
             var row = await _entity.FindAsync(id);
-            if (row != null)
-            {
-                return new Response<T>
-                {
-                    WasSuccess = true,
-                    Result = row
-                };
-            }
-            return new Response<T>
-            {
-                WasSuccess = false,
-                Message = "Registro no encontrado"
-            };
+            return row!;
         }
 
-        public async Task<Response<IEnumerable<T>>> GetAsync()
+        public async Task<IEnumerable<T>> GetAsync()
         {
-            return new Response<IEnumerable<T>>
-            {
-                WasSuccess = true,
-                Result = await _entity.ToListAsync()
-            };
+            return await _entity.ToListAsync();
         }
 
         public async Task<Response<T>> UpdateAsync(T entity)
