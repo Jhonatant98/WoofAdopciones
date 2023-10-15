@@ -15,5 +15,7 @@ namespace WoofAdopciones.Shared.Entities
         public int StateId { get; set; }
 
         public State? State { get; set; }
+
+        public ICollection<User>? Users { get; set; }
     }
 }

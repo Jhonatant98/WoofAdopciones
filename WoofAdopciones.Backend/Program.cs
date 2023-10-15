@@ -4,7 +4,9 @@ using WoofAdopciones.Backend.Interfaces;
 using WoofAdopciones.Backend.Repositories;
 using WoofAdopciones.Backend.Services;
 using WoofAdopciones.Backend.UnitsOfWork;
-using WoofAdopciones.Backend.Services;
+using Microsoft.AspNetCore.Identity;
+using WoofAdopciones.Backend.Helpers;
+using WoofAdopciones.Shared.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +21,21 @@ builder.Services.AddScoped(typeof(IGenericUnitOfWork<>), typeof(GenericUnitOfWor
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<IApiService, ApiService>();
 builder.Services.AddTransient<SeedDb>();
+
+builder.Services.AddIdentity<User, IdentityRole>(x =>
+{
+    x.User.RequireUniqueEmail = true;
+    x.Password.RequireDigit = false;
+    x.Password.RequiredUniqueChars = 0;
+    x.Password.RequireLowercase = false;
+    x.Password.RequireNonAlphanumeric = false;
+    x.Password.RequireUppercase = false;
+})
+    .AddEntityFrameworkStores<DataContext>()
+    .AddDefaultTokenProviders();
+
+builder.Services.AddScoped<IUserHelper, UserHelper>();
+
 var app = builder.Build();
 
 SeedData(app);
@@ -40,6 +57,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 
