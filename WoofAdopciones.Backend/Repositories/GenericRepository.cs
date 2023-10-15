@@ -38,14 +38,23 @@ namespace WoofAdopciones.Backend.Repositories
             }
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task<Response<T>> DeleteAsync(int id)
         {
             var row = await _entity.FindAsync(id);
             if (row != null)
             {
                 _entity.Remove(row);
                 await _context.SaveChangesAsync();
+                return new Response<T>
+                {
+                    WasSuccess = true,
+                };
             }
+            return new Response<T>
+            {
+                WasSuccess = false,
+                Message = "Registro no encontrado"
+            };
         }
 
         public async Task<T> GetAsync(int id)

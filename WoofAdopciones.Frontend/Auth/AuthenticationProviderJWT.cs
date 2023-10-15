@@ -1,8 +1,8 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
-using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.JSInterop;
 using System.Net.Http.Headers;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.JSInterop;
 using WoofAdopciones.Frontend.Helpers;
 
 namespace WoofAdopciones.Frontend.Auth

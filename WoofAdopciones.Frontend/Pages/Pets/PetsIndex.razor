@@ -1,4 +1,5 @@
 ﻿@page "/pets"
+@attribute [Authorize(Roles = "Admin")]
 @inject IRepository repository
 @inject SweetAlertService sweetAlertService
 

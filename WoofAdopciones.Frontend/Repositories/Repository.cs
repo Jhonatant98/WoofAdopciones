@@ -78,8 +78,7 @@ namespace WoofAdopciones.Frontend.Repositories
             var responseHttp = await _httpClient.PutAsync(url, messageContet);
             if (responseHttp.IsSuccessStatusCode)
             {
-                var response = await UnserializeAnswer
-                    <TResponse>(responseHttp);
+                var response = await UnserializeAnswer<TResponse>(responseHttp);
                 return new HttpResponseWrapper<TResponse>(response, false, responseHttp);
             }
 

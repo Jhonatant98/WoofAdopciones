@@ -1,10 +1,12 @@
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using Microsoft.AspNetCore.Components.Authorization;
+
 using WoofAdopciones.Frontend;
 using WoofAdopciones.Frontend.Repositories;
-using CurrieTechnologies.Razor.SweetAlert2;
-using Microsoft.AspNetCore.Components.Authorization;
 using WoofAdopciones.Frontend.Auth;
+
+using CurrieTechnologies.Razor.SweetAlert2;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");

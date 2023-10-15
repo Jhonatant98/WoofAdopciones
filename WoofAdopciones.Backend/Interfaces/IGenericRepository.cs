@@ -10,7 +10,7 @@ namespace WoofAdopciones.Backend.Interfaces
 
         Task<Response<T>> AddAsync(T entity);
 
-        Task DeleteAsync(int id);
+        Task<Response<T>> DeleteAsync(int id);
 
         Task<Response<T>> UpdateAsync(T entity);
     }
