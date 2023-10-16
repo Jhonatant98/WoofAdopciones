@@ -4,9 +4,9 @@ namespace WoofAdopciones.Backend.Interfaces
 {
     public interface IGenericRepository<T> where T : class
     {
-        Task<Response<T>> GetAsync(int id);
+        Task<T> GetAsync(int id);
 
-        Task<Response<IEnumerable<T>>> GetAsync();
+        Task<IEnumerable<T>> GetAsync();
 
         Task<Response<T>> AddAsync(T entity);
 

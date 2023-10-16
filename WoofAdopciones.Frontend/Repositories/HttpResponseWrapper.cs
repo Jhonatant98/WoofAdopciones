@@ -25,19 +25,23 @@ namespace WoofAdopciones.Frontend.Repositories
             }
 
             var statusCode = HttpResponseMessage.StatusCode;
+
             if (statusCode == HttpStatusCode.NotFound)
             {
                 return "Recurso no encontrado";
             }
-            else if (statusCode == HttpStatusCode.BadRequest)
+
+            if (statusCode == HttpStatusCode.BadRequest)
             {
                 return await HttpResponseMessage.Content.ReadAsStringAsync();
             }
-            else if (statusCode == HttpStatusCode.Unauthorized)
+
+            if (statusCode == HttpStatusCode.Unauthorized)
             {
                 return "Tienes que logearte para hacer esta operación";
             }
-            else if (statusCode == HttpStatusCode.Forbidden)
+
+            if (statusCode == HttpStatusCode.Forbidden)
             {
                 return "No tienes permisos para hacer esta operación";
             }

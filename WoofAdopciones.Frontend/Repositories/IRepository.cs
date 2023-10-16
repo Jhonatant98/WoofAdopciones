@@ -13,6 +13,6 @@
         Task<HttpResponseWrapper<object>> PutAsync<T>(string url, T model);
 
         Task<HttpResponseWrapper<TResponse>> PutAsync<T, TResponse>(string url, T model);
-
+    
     }
 }

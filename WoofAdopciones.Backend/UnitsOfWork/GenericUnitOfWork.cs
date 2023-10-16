@@ -14,11 +14,11 @@ namespace WoofAdopciones.Backend.UnitsOfWork
 
         public async Task<Response<T>> AddAsync(T model) => await _repository.AddAsync(model);
 
-        public async Task<Response<T>> DeleteAsync(int id) => await _repository.DeleteAsync(id);
+        public async Task DeleteAsync(int id) => await _repository.DeleteAsync(id);
 
-        public async Task<Response<IEnumerable<T>>> GetAsync() => await _repository.GetAsync();
+        public async Task<IEnumerable<T>> GetAsync() => await _repository.GetAsync();
 
-        public async Task<Response<T>> GetAsync(int id) => await _repository.GetAsync(id);
+        public async Task<T> GetAsync(int id) => await _repository.GetAsync(id);
 
         public async Task<Response<T>> UpdateAsync(T model) => await _repository.UpdateAsync(model);
     }
