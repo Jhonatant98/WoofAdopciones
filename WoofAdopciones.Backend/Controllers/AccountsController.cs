@@ -180,8 +180,8 @@ namespace WoofAdopciones.Backend.Controllers
             }, HttpContext.Request.Scheme, _configuration["Url Frontend"]);
 
             return _mailHelper.SendMail(user.FullName, user.Email!,
-                $"Sales - Confirmación de cuenta",
-                $"<h1>Sales - Confirmación de cuenta</h1>" +
+                $"WoofAdopciones - Confirmación de cuenta",
+                $"<h1>WoofAdopciones - Confirmación de cuenta</h1>" +
                 $"<p>Para habilitar el usuario, por favor hacer clic 'Confirmar Email':</p>" +
                 $"<b><a href ={tokenLink}>Confirmar Email</a></b>");
         }
