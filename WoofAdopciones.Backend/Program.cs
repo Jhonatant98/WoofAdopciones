@@ -86,8 +86,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         ClockSkew = TimeSpan.Zero
     });
 
-var app = builder.Build();
+builder.Services.AddScoped<IFileStorage, FileStorage>();
 
+var app = builder.Build();
 SeedData(app);
 
 void SeedData(WebApplication app)
