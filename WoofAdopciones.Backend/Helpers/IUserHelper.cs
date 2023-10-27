@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity;
 using WoofAdopciones.Shared.DTOs;
 using WoofAdopciones.Shared.Entities;
 
@@ -35,3 +35,4 @@ namespace WoofAdopciones.Backend.Helpers
         Task<IdentityResult> ResetPasswordAsync(User user, string token, string password);
     }
 }
+
