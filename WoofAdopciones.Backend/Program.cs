@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using WoofAdopciones.Backend.Data;
-using WoofAdopciones.Backend.Interfaces;
 using WoofAdopciones.Backend.Repositories;
 using WoofAdopciones.Backend.Services;
 using WoofAdopciones.Backend.UnitsOfWork;
@@ -58,6 +57,22 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddDbContext<DataContext>(x => x.UseSqlServer("name=LocalConnection"));
 builder.Services.AddScoped(typeof(IGenericUnitOfWork<>), typeof(GenericUnitOfWork<>));
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+
+builder.Services.AddScoped<ICitiesRepository, CitiesRepository>();
+builder.Services.AddScoped<ICountriesRepository, CountriesRepository>();
+builder.Services.AddScoped<IStatesRepository, StatesRepository>();
+
+builder.Services.AddScoped<IOrderTypeRepository, OrderTypeRepository>();
+builder.Services.AddScoped<IPetsRepository, PetsRepository>();
+builder.Services.AddScoped<IUsersRepository, UsersRepository>();
+
+builder.Services.AddScoped<ICitiesUnitOfWork, CitiesUnitOfWork>();
+builder.Services.AddScoped<ICountriesUnitOfWork, CountriesUnitOfWork>();
+builder.Services.AddScoped<IStatesUnitOfWork, StatesUnitOfWork>();
+builder.Services.AddScoped<IOrderTypeUnitOfWork, OrderTypeUnitOfWork>();
+builder.Services.AddScoped<IPetsUnitOfWork, PetsUnitOfWork>();
+
+
 builder.Services.AddScoped<IApiService, ApiService>();
 builder.Services.AddTransient<SeedDb>();
 

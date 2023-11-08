@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WoofAdopciones.Shared.Entities
+namespace WoofAdopciones.Shared.DTOs
 {
-    public class Pet
+    public class PetDTO
     {
         public int Id { get; set; }
 
@@ -27,21 +28,15 @@ namespace WoofAdopciones.Shared.Entities
         [MaxLength(500, ErrorMessage = "El campo {0} debe tener máximo {1} caractéres.")]
         public string Description { get; set; } = null!;
 
+        [Display(Name = "Fecha de Publicación")]
+        public DateTime CreatedOn { get; set; }
+
+
         [DisplayFormat(DataFormatString = "{0:N2}")]
         [Display(Name = "Inventario")]
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
         public float Stock { get; set; }
 
-        [Display(Name = "Fecha de Publicación")]
-        public DateTime CreatedOn { get; set; }
-
-        public ICollection<PetImage>? PetImages { get; set; }
-
-        [Display(Name = "Imágenes")]
-        public int ProductImagesNumber => PetImages == null || PetImages.Count == 0 ? 0 : PetImages.Count;
-
-        [Display(Name = "Imagén")]
-        public string MainImage => PetImages == null || PetImages.Count == 0 ? string.Empty : PetImages.FirstOrDefault()!.Image;
-
+        public List<string>? PetImages { get; set; }
     }
 }
