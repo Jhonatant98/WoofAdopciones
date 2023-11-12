@@ -1,4 +1,6 @@
-﻿@inject SweetAlertService sweetAlertService
+﻿@page "/Contact"
+@inject SweetAlertService sweetAlertService
+@inject IRepository repository
 
 @if (loading)
 {
@@ -83,6 +85,8 @@
                 </div>
             </div>
         </div>
+        <a class="btn btn-warning btn-sm" @onclick=@(() => CreteComplaintAsync())><i class="oi oi-pencil" /> Editar</a>
+
     </EditForm>
 }
 
@@ -91,17 +95,15 @@
     private List<State>? states;
     private List<City>? cities;
     private bool loading;
-
+    private Complaint Complaint = new();
     private EditContext editContext = null!;
+
 
     protected override void OnInitialized()
     {
         editContext = new(Complaint);
     }
 
-    [EditorRequired]
-    [Parameter]
-    public Complaint Complaint { get; set; } = null!;
 
     protected override async Task OnInitializedAsync()
     {
@@ -129,7 +131,7 @@
         var selectedCountry = Convert.ToInt32(e.Value!);
         await LoadStatesAsyn(selectedCountry);
         cities = null;
-        userDTO.CityId = 0;
+        Complaint.CityId = 0;
     }
     private async Task LoadStatesAsyn(int countryId)
     {
@@ -146,7 +148,7 @@
     {
         var selectedState = Convert.ToInt32(e.Value!);
         await LoadCitiesAsyn(selectedState);
-        userDTO.CityId = 0;
+        Complaint.CityId = 0;
     }
     private async Task LoadCitiesAsyn(int stateId)
     {
@@ -163,7 +165,7 @@
     private async Task CreteComplaintAsync()
     {
         loading = true;
-        var responseHttp = await repository.PostAsync<Complaint>("/api/complaints", userDTO);
+        var responseHttp = await repository.PostAsync<Complaint>("/api/Complaints", Complaint);
         if (responseHttp.Error)
         {
             loading = false;
