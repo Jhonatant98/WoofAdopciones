@@ -29,8 +29,6 @@ namespace WoofAdopciones.Shared.Entities
         [Display(Name = "Logo")]
         public string? Photo { get; set; }
 
-        public City City { get; set; } = null!;
-
         [Display(Name = "Ciudad")]
         [Range(1, int.MaxValue, ErrorMessage = "Debes seleccionar una {0}.")]
         public int CityId { get; set; }
@@ -38,17 +36,5 @@ namespace WoofAdopciones.Shared.Entities
         [Display(Name = "Nombre Completo")]
         public string FullName => $"{Name} {NameCampus}";
 
-        [Display(Name = "Dirección")]
-        public string FullAddress
-        {
-            get
-            {
-                var fullAddress = Address;
-                if (City != null && City!.Name != null) fullAddress += $", {City.Name}";
-                if (City != null && City!.State != null && City!.State!.Name != null) fullAddress += $", {City.State.Name}";
-                if (City != null && City!.State != null && City!.State!.Country != null && City!.State!.Country!.Name != null) fullAddress += $", {City.State.Country.Name}";
-                return fullAddress;
-            }
-        }
     }
 }

@@ -1,0 +1,12 @@
+﻿@page "/adoptioncenters/edit/{Id:int}"
+
+<h3>Editar Centro de Adopción</h3>
+
+@if (adoptionCenter is null)
+{
+    <Loading />
+}
+else
+{
+    <AdoptionCenterForm @ref="adoptionCenterForm" AdoptionCenter="adoptionCenter" OnValidSubmit="EditAsync" ReturnAction="Return" />
+}

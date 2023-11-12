@@ -1,5 +1,6 @@
 ﻿using WoofAdopciones.Shared.DTOs;
 using WoofAdopciones.Shared.Responses;
+
 namespace WoofAdopciones.Backend.UnitsOfWork
 {
     public interface IGenericUnitOfWork<T> where T : class
