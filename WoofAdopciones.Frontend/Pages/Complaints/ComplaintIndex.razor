@@ -1,0 +1,56 @@
+﻿@page "/Complaint"
+
+<h3>Denuncias</h3>
+@if (complaints is null)
+{
+    <Loading />
+}
+else
+{
+    <Pagination CurrentPage="currentPage"
+                TotalPages="totalPages"
+                SelectedPage="SelectedPageAsync" />
+
+    <GenericList MyList="complaints!">
+        <Body>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Denuncias</th>
+                        <th style="width:90px">Ciudades</th>
+                        <th style="width:140px"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var complaint in complaints!)
+                    {
+                        <tr>
+                            <td> @complaint.Description</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </Body>
+    </GenericList>
+}
+
+@code {
+    private List<Complaint>? complaints;
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadAsync();
+    }
+
+    private async Task LoadAsync()
+    {
+        var response = await repository.GetAsync<List<Complaint>>("api/Complaints");
+        if (response.Error)
+        {
+            var message = await response.GetErrorMessageAsync();
+            await sweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+            return;
+        }
+
+        pets = response.Response;
+    }
+}

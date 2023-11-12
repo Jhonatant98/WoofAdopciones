@@ -19,11 +19,12 @@ namespace WoofAdopciones.Backend.Data
 
         public DbSet<State> States { get; set; }
 
+        public DbSet<Complaint> Complaints { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<AdoptionCenter>().HasIndex(c => c.Name).IsUnique();
-            modelBuilder.Entity<Pet>().HasIndex(c => c.Name).IsUnique();
             modelBuilder.Entity<OrderType>().HasIndex(c => c.Name).IsUnique();
             modelBuilder.Entity<Country>().HasIndex(c => c.Name).IsUnique();
             modelBuilder.Entity<State>().HasIndex(s => new { s.Name, s.CountryId }).IsUnique();
