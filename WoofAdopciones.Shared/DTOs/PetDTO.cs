@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WoofAdopciones.Shared.Entities;
 
 namespace WoofAdopciones.Shared.DTOs
 {
@@ -38,5 +39,11 @@ namespace WoofAdopciones.Shared.DTOs
         public float Stock { get; set; }
 
         public List<string>? PetImages { get; set; }
+
+        public AdoptionCenter? AdoptionCenter { get; set; }
+
+        [Display(Name = "Centro de adopción")]
+        [Range(1, int.MaxValue, ErrorMessage = "Debes seleccionar un {0}.")]
+        public int AdoptionCenterId { get; set; }
     }
 }

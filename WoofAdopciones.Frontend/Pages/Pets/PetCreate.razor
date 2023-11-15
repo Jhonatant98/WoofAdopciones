@@ -1,43 +1,13 @@
 ﻿@page "/pets/create"
-@attribute [Authorize(Roles = "Admin")]
-@inject NavigationManager navigationManager
-@inject IRepository repository
-@inject SweetAlertService sweetAlertService
 
 <h3>Nueva mascota</h3>
 
-
-<PetForm @ref="petForm" Pet="pet" OnValidSubmit="CreateAsync" ReturnAction="Return" />
-
-@code {
-    private Pet pet = new();
-    private PetForm? petForm;
-
-    private async Task CreateAsync()
-    {
-        var response = await repository.PostAsync("/api/Pets", pet);
-        if (response.Error)
-        {
-            var message = await response.GetErrorMessageAsync();
-            await sweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
-            return;
-        }
-        Return();
-        var toast = sweetAlertService.Mixin(new SweetAlertOptions
-            {
-                Toast = true,
-                Position = SweetAlertPosition.BottomEnd,
-                ShowConfirmButton = true,
-                Timer = 3000
-            });
-        await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Registro creado con éxito.");
-
-    }
-
-    private void Return()
-    {
-        petForm!.FormPostedSuccessfully = true;
-        navigationManager.NavigateTo("/Pets");
-    }
-
+@if (loading)
+{
+    <Loading />
 }
+else
+{
+    <PetForm @ref="petForm" PetDTO="petDTO" OnValidSubmit="CreateAsync" ReturnAction="Return" />
+}
+

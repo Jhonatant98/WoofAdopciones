@@ -1,89 +1,58 @@
 ﻿@page "/pets"
-@attribute [Authorize(Roles = "Admin")]
-@inject IRepository repository
-@inject SweetAlertService sweetAlertService
 
 <h3>Mascotas</h3>
 
 <a href="/pets/create" class="btn btn-primary mt-3">Nueva Mascota</a>
+<Pagination CurrentPage="currentPage"
+            TotalPages="totalPages"
+            SelectedPage="SelectedPageAsync" />
 
-<GenericList MyList="pets">
+<GenericList MyList="Pets">
     <Body>
 
-        <div class="row row-cols-1 row-cols-md-3 g-4 mt-3">
-            @foreach (var pet in pets!)
-            {
-                <div class="col">
-                    <div class="card">
-                        <img width="100" height="300" src="https://img.freepik.com/vector-premium/diseno-logotipo-dibujos-animados-mascota-perro-lindo-estilo-diseno-plano_203040-109.jpg" class="card-img-top" alt="...">
-                        <div class="card-body">
-                            <h5 class="card-title">@pet.Name</h5>
-                            <p class="card-text">Edad: @pet.Age</p>
-                            <p class="card-text"><small class="text-muted">Color: @pet.Color</small></p>
-                            <p>
-                                <a class="btn btn-warning btn-sm" href="/pets/PetEdit/@pet.Id">Editar</a>
-                                <button class="btn btn-danger btn-sm" @onclick=@(() => DeleteAsync(pet))>Borrar</button>
-                            </p>
-                        </div>
-                    </div>
-                </div>
+       
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Descripción</th>
+                            <th>Color</th>
+                            <th>Inventario</th>
+                            <th>Imagenes</th>
+                            <th>Imagen Principal</th>
+                            <th style="width:168px"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var pet in Pets!)
+                        {
+                            <tr>
+                                <td>
+                                    @pet.Name
+                                </td>
+                                <td>
+                                    @pet.Description
+                                </td>
+                                <td>
+                                    @pet.Color
+                                </td>
+                                <td>
+                                    @($"{pet.Stock:N2}")
+                                </td>
+                                <td>
+                                    @pet.ProductImagesNumber
+                                </td>
+                                <td>
+                                    <img src="@pet.MainImage" style="width:100px;" />
+                                </td>
+                                <td>
+                                <a class="btn btn-warning btn-sm" href="/pets/PetEdit/@pet.Id"><i class="oi oi-pencil" />Editar</a>
+                                <button class="btn btn-danger btn-sm" @onclick=@(() => DeleteAsync(pet.Id))>Borrar</button>
+                        </td>
+                    </tr>
 
             }
-        </div>
+            </tbody>
+        </table>
     </Body>
 </GenericList>
-
-@code {
-    private List<Pet>? pets;
-    protected override async Task OnInitializedAsync()
-    {
-        await LoadAsync();
-    }
-
-    private async Task LoadAsync()
-    {
-        var response = await repository.GetAsync<List<Pet>>("api/Pets");
-        if (response.Error)
-        {
-            var message = await response.GetErrorMessageAsync();
-            await sweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
-            return;
-        }
-
-        pets = response.Response;
-    }
-    protected async Task DeleteAsync(Pet pet)
-    {
-        var result = await sweetAlertService.FireAsync(new SweetAlertOptions
-            {
-                Title = "Confirmación",
-                Text = $"¿Esta seguro que quieres borrar ma mascota: {pet.Name}?",
-                Icon = SweetAlertIcon.Question,
-                ShowCancelButton = true
-            });
-
-        var confirm = string.IsNullOrEmpty(result.Value);
-        if (confirm)
-        {
-            return;
-        }
-
-        var response = await repository.DeleteAsync($"api/Pets/{pet.Id}");
-        if (response.Error)
-        {
-            var message = await response.GetErrorMessageAsync();
-            await sweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
-            return;
-        }
-        await LoadAsync();
-        var toast = sweetAlertService.Mixin(new SweetAlertOptions
-            {
-                Toast = true,
-                Position = SweetAlertPosition.BottomEnd,
-                ShowConfirmButton = true,
-                Timer = 3000
-            });
-        await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Registro borrado con éxito.");
-    }
-
-}

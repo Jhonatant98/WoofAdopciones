@@ -197,7 +197,7 @@ namespace WoofAdopciones.Backend.Repositories
                 if (!imageDTO.Images[i].StartsWith("https://"))
                 {
                     var photoPet = Convert.FromBase64String(imageDTO.Images[i]);
-                    imageDTO.Images[i] = await _fileStorage.SaveFileAsync(photoPet, ".jpg", "pets");
+                    imageDTO.Images[i] = await _fileStorage.SaveFileAsync(photoPet, ".jpg", "products");
                     pet.PetImages!.Add(new PetImage { Image = imageDTO.Images[i] });
                 }
             }

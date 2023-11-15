@@ -1,6 +1,8 @@
 ﻿@page "/Contact"
 @inject SweetAlertService sweetAlertService
 @inject IRepository repository
+@inject NavigationManager navigationManager
+
 
 @if (loading)
 {
@@ -85,7 +87,7 @@
                 </div>
             </div>
         </div>
-        <a class="btn btn-warning btn-sm" @onclick=@(() => CreteComplaintAsync())><i class="oi oi-pencil" /> Editar</a>
+        <a class="btn btn-primary" @onclick=@(() => CreteComplaintAsync())> Guardar </a>
 
     </EditForm>
 }
@@ -175,6 +177,11 @@
         }
         loading = false;
         await sweetAlertService.FireAsync("Confirmación", "Su denuncia ha sido creada con éxito.", SweetAlertIcon.Info);
+    }
+
+    private void Return()
+    {
+        navigationManager.NavigateTo("/");
     }
 
 }

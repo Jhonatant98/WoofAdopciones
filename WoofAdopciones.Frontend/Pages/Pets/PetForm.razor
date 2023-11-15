@@ -1,86 +1,65 @@
-﻿@inject SweetAlertService sweetAlertService
-
-<NavigationLock OnBeforeInternalNavigation="OnBeforeInternalNavigationAsync"></NavigationLock>
+﻿<NavigationLock OnBeforeInternalNavigation="OnBeforeInternalNavigation"></NavigationLock>
 
 <EditForm EditContext="editContext" OnValidSubmit="OnValidSubmit">
     <DataAnnotationsValidator />
     <div class="mb-3">
         <label>Nombre:</label>
         <div>
-            <InputText class="form-control" @bind-Value="@Pet.Name" />
-            <ValidationMessage For="@(() => Pet.Name)" />
+            <InputText class="form-control" @bind-Value="@PetDTO.Name" />
+            <ValidationMessage For="@(() => PetDTO.Name)" />
         </div>
     </div>
     <div class="mb-3">
         <div>
             <label for="Age">Edad</label>
-            <input id="Age" type="int" class="form-control" @bind="@Pet.Age" />
-            <ValidationMessage For="@(() => Pet.Age)" />
+            <input id="Age" type="int" class="form-control" @bind="@PetDTO.Age" />
+            <ValidationMessage For="@(() => PetDTO.Age)" />
         </div>
     </div>
     <div class="mb-3">
 
         <label>Color</label>
         <div>
-            <InputText class="form-control" @bind-Value="@Pet.Color" />
-            <ValidationMessage For="@(() => Pet.Color)" />
+            <InputText class="form-control" @bind-Value="@PetDTO.Color" />
+            <ValidationMessage For="@(() => PetDTO.Color)" />
         </div>
     </div>
+    <div class="mb-3">
+
+        <label>Descripción</label>
+        <div>
+            <InputText class="form-control" @bind-Value="@PetDTO.Description" />
+            <ValidationMessage For="@(() => PetDTO.Description)" />
+        </div>
+    </div>
+        <div class="col-6">
+        <div class="mb-3">
+            <label>Centro de Adopción:</label>
+            <div>
+                <select class="form-select" @bind="PetDTO.AdoptionCenterId">
+                    <option value="0">-- Seleccione un Centro de Adopción: --</option>
+                    @if (adoptionCenters is not null)
+                    {
+                        @foreach (var adoptionCenter in adoptionCenters)
+                        {
+                            <option value="@adoptionCenter.Id">@adoptionCenter.Name</option>
+                        }
+                    }
+                </select>
+                <ValidationMessage For="@(() => PetDTO.AdoptionCenterId)" />
+            </div>
+        </div>
+                    <div class="mb-3">
+                        <InputImg Label="Foto" ImageSelected="ImageSelected" ImageURL="@imageUrl" />
+                    </div>
+                    @if (IsEdit)
+                    {
+                        <div class="mb-3">
+                            <button type="button" class="btn btn-outline-primary" @onclick="AddImageAction"><i class="oi oi-plus" /> Agregar Imagenes</button>
+                            <button type="button" class="btn btn-outline-danger" @onclick="RemoveImageAction"><i class="oi oi-trash" /> Eliminar Última Imagén</button>
+                        </div>
+                    }
+                </div>
     <button class="btn btn-primary" type="submit">Guardar</button>
     <button class="btn btn-success" @onclick="ReturnAction">Regresar</button>
 </EditForm>
-
-@code {
-    private EditContext editContext = null!;
-
-    protected override void OnInitialized()
-    {
-        editContext = new(Pet);
-    }
-
-    [EditorRequired]
-    [Parameter]
-    public Pet Pet { get; set; } = null!;
-
-    [EditorRequired]
-    [Parameter]
-    public EventCallback OnValidSubmit { get; set; }
-
-    [EditorRequired]
-    [Parameter]
-    public EventCallback ReturnAction { get; set; }
-
-    public bool FormPostedSuccessfully { get; set; }
-
-    private async Task OnBeforeInternalNavigationAsync(LocationChangingContext context)
-    {
-        var formWasEdited = editContext.IsModified();
-
-        if (!formWasEdited)
-        {
-            return;
-        }
-
-        if (FormPostedSuccessfully)
-        {
-            return;
-        }
-
-        var result = await sweetAlertService.FireAsync(new SweetAlertOptions
-            {
-                Title = "Confirmación",
-                Text = "¿Deseas abandonar la página y perder los cambios?",
-                Icon = SweetAlertIcon.Question,
-                ShowCancelButton = true
-            });
-
-        var confirm = !string.IsNullOrEmpty(result.Value);
-
-        if (confirm)
-        {
-            return;
-        }
-
-        context.PreventNavigation();
-    }
-}

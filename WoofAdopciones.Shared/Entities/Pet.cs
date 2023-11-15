@@ -43,5 +43,6 @@ namespace WoofAdopciones.Shared.Entities
         [Display(Name = "Imagén")]
         public string MainImage => PetImages == null || PetImages.Count == 0 ? string.Empty : PetImages.FirstOrDefault()!.Image;
 
+        public int AdoptionCenterId { get; set; }
     }
 }

@@ -29,6 +29,8 @@ namespace WoofAdopciones.Shared.Entities
         [Display(Name = "Logo")]
         public string? Photo { get; set; }
 
+        public City? City { get; set; }
+
         [Display(Name = "Ciudad")]
         [Range(1, int.MaxValue, ErrorMessage = "Debes seleccionar una {0}.")]
         public int CityId { get; set; }
