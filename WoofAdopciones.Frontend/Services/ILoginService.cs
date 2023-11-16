@@ -1,4 +1,4 @@
-﻿namespace WoofAdopciones.Frontend.Auth
+﻿namespace WoofAdopciones.Frontend.Services
 {
     public interface ILoginService
     {

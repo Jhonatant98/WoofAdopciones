@@ -38,6 +38,7 @@ else
                                 <th>Documento</th>
                                 <th>Teléfono</th>
                                 <th>Email</th>
+                                <th>Dirección</th>
                                 <th>Confirmado</th>
                                 <th>Tipo Usuario</th>
                             </tr>
@@ -51,6 +52,7 @@ else
                                     <td>@user.Document</td>
                                     <td>@user.PhoneNumber</td>
                                     <td>@user.Email</td>
+                                    <td>@user.FullAddress</td>
                                     <td>@user.EmailConfirmed</td>
                                     <td>@EnumHelper.GetEnumDescription(user.UserType)</td>
                                 </tr>

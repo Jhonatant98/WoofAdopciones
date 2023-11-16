@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Text.Json.Serialization;
+using Microsoft.Extensions.Azure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -55,6 +56,12 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 builder.Services.AddDbContext<DataContext>(x => x.UseSqlServer("name=LocalConnection"));
+builder.Services.AddScoped<IMailHelper, MailHelper>();
+builder.Services.AddScoped<ISmtpClient, SmtpClientWrapper>();
+builder.Services.AddScoped<HttpClient>();
+builder.Services.AddScoped<IBlobContainerClientFactory, BlobContainerClientFactory>();
+builder.Services.AddScoped<IRuntimeInformationWrapper, RuntimeInformationWrapper>();
+
 builder.Services.AddScoped(typeof(IGenericUnitOfWork<>), typeof(GenericUnitOfWork<>));
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
@@ -73,10 +80,12 @@ builder.Services.AddScoped<IStatesUnitOfWork, StatesUnitOfWork>();
 builder.Services.AddScoped<IOrderTypeUnitOfWork, OrderTypeUnitOfWork>();
 builder.Services.AddScoped<IPetsUnitOfWork, PetsUnitOfWork>();
 builder.Services.AddScoped<IAdoptionCenterUnitOfWork, AdoptionCenterUnitOfWork>();
+builder.Services.AddScoped<IUsersUnitOfWork, UsersUnitOfWork>();
 
-
-builder.Services.AddScoped<IApiService, ApiService>();
 builder.Services.AddTransient<SeedDb>();
+builder.Services.AddScoped<IApiService, ApiService>();
+builder.Services.AddScoped<IUserHelper, UserHelper>();
+builder.Services.AddScoped<IFileStorage, FileStorage>();
 
 builder.Services.AddIdentity<User, IdentityRole>(x =>
 {
@@ -106,8 +115,11 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         ClockSkew = TimeSpan.Zero
     });
 
-builder.Services.AddScoped<IFileStorage, FileStorage>();
-builder.Services.AddScoped<IMailHelper, MailHelper>();
+builder.Services.AddAzureClients(clientBuilder =>
+{
+    clientBuilder.AddBlobServiceClient(builder.Configuration["ConnectionStrings:AzureStorage:blob"], preferMsi: true);
+    clientBuilder.AddQueueServiceClient(builder.Configuration["ConnectionStrings:AzureStorage:queue"], preferMsi: true);
+});
 
 var app = builder.Build();
 SeedData(app);
@@ -129,7 +141,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 

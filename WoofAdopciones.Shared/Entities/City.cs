@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-
 namespace WoofAdopciones.Shared.Entities
 {
     public class City
@@ -14,7 +13,8 @@ namespace WoofAdopciones.Shared.Entities
 
         public int StateId { get; set; }
 
-        public State? State { get; set; }
+        public State State { get; set; } = null!;
 
+        public ICollection<User>? Users { get; set; }
     }
 }

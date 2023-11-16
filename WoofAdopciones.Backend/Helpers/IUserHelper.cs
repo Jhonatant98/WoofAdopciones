@@ -4,6 +4,7 @@ using WoofAdopciones.Shared.Entities;
 
 namespace WoofAdopciones.Backend.Helpers
 {
+
     public interface IUserHelper
     {
         Task<User> GetUserAsync(string email);
@@ -35,4 +36,3 @@ namespace WoofAdopciones.Backend.Helpers
         Task<IdentityResult> ResetPasswordAsync(User user, string token, string password);
     }
 }
-

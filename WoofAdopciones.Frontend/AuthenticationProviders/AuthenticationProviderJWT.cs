@@ -4,8 +4,9 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.JSInterop;
 using WoofAdopciones.Frontend.Helpers;
+using WoofAdopciones.Frontend.Services;
 
-namespace WoofAdopciones.Frontend.Auth
+namespace WoofAdopciones.Frontend.AuthenticationProviders
 {
     public class AuthenticationProviderJWT : AuthenticationStateProvider, ILoginService
     {
@@ -20,9 +21,9 @@ namespace WoofAdopciones.Frontend.Auth
             _httpClient = httpClient;
             _tokenKey = "TOKEN_KEY";
             _anonimous = new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
-
         }
-        public async override Task<AuthenticationState> GetAuthenticationStateAsync()
+
+        public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
             var token = await _jSRuntime.GetLocalStorage(_tokenKey);
             if (token is null)
@@ -31,20 +32,6 @@ namespace WoofAdopciones.Frontend.Auth
             }
 
             return BuildAuthenticationState(token.ToString()!);
-        }
-
-        public async Task LoginAsync(string token)
-        {
-            await _jSRuntime.SetLocalStorage(_tokenKey, token);
-            var authState = BuildAuthenticationState(token);
-            NotifyAuthenticationStateChanged(Task.FromResult(authState));
-        }
-
-        public async Task LogoutAsync()
-        {
-            await _jSRuntime.RemoveLocalStorage(_tokenKey);
-            _httpClient.DefaultRequestHeaders.Authorization = null;
-            NotifyAuthenticationStateChanged(Task.FromResult(_anonimous));
         }
 
         private AuthenticationState BuildAuthenticationState(string token)
@@ -59,7 +46,20 @@ namespace WoofAdopciones.Frontend.Auth
             var jwtSecurityTokenHandler = new JwtSecurityTokenHandler();
             var unserializedToken = jwtSecurityTokenHandler.ReadJwtToken(token);
             return unserializedToken.Claims;
+        }
 
+        public async Task LoginAsync(string token)
+        {
+            await _jSRuntime.SetLocalStorage(_tokenKey, token);
+            var authState = BuildAuthenticationState(token);
+            NotifyAuthenticationStateChanged(Task.FromResult(authState));
+        }
+
+        public async Task LogoutAsync()
+        {
+            await _jSRuntime.RemoveLocalStorage(_tokenKey);
+            _httpClient.DefaultRequestHeaders.Authorization = null;
+            NotifyAuthenticationStateChanged(Task.FromResult(_anonimous));
         }
     }
 }

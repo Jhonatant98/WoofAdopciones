@@ -13,6 +13,7 @@ using WoofAdopciones.Shared.Responses;
 
 namespace WoofAdopciones.Backend.Controllers
 {
+
     [ApiController]
     [Route("/api/accounts")]
     public class AccountsController : ControllerBase

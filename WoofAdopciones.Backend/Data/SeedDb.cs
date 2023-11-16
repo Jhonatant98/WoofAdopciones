@@ -13,23 +13,56 @@ namespace WoofAdopciones.Backend.Data
         private readonly DataContext _context;
         private readonly IApiService _apiService;
         private readonly IUserHelper _userHelper;
+        private readonly IFileStorage _fileStorage;
+        private readonly IRuntimeInformationWrapper _runtimeInformationWrapper;
 
-        public SeedDb(DataContext context, IApiService apiService, IUserHelper userHelper)
+        public SeedDb(DataContext context, IApiService apiService, IUserHelper userHelper, IFileStorage fileStorage, IRuntimeInformationWrapper runtimeInformationWrapper)
         {
             _context = context;
             _apiService = apiService;
             _userHelper = userHelper;
+            _fileStorage = fileStorage;
+            _runtimeInformationWrapper = runtimeInformationWrapper;
         }
 
         public async Task SeedAsync()
         {
             await _context.Database.EnsureCreatedAsync();
-            await CheckCountriesAsync();
+            //await CheckCountriesAsync();
+            await CheckCountriesAsync2();
             await CheckOrderTypeAsync();
             await CheckRolesAsync();
             await CheckUserAsync("1010", "Jhonatan", "Wirbiezcas", "jhonatan@yopmail.com", "300 594 3458", "Bello", UserType.Admin);
             await CheckUserAsync("1011", "Juan Diego", "Gil", "JuanDiego@yopmail.com", "313 548 2252", "La Raya", UserType.Admin);
         }
+
+
+        private async Task CheckCountriesAsync2()
+        {
+            if (!_context.Countries.Any())
+            {
+                _context.Countries.Add(new Country
+                {
+                    Name = "Colombia",
+                    States = new List<State>
+                    {
+                        new State
+                        {
+                            Name = "Antioquia",
+                            Cities = new List<City>
+                            {
+                                new City
+                                {
+                                    Name = "Medellín"
+                                }
+                            }
+                        }
+                    }
+                });
+                await _context.SaveChangesAsync();
+            }
+        }
+
 
         private async Task<User> CheckUserAsync(string document, string firstName, string lastName, string email, string phone, string address, UserType userType)
         {
