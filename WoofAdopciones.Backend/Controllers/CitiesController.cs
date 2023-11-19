@@ -29,6 +29,7 @@ namespace WoofAdopciones.Backend.Controllers
             return Ok(await _citiesUnitOfWork.GetComboAsync(stateId));
         }
 
+        [AllowAnonymous]
         [HttpGet]
         public override async Task<IActionResult> GetAsync([FromQuery] PaginationDTO pagination)
         {

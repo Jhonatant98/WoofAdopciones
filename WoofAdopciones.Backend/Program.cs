@@ -12,6 +12,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Text.Json.Serialization;
 using Microsoft.Extensions.Azure;
+using WoofAdopciones.Backend.Helpers.WoofAdopciones.Backend.Helpers;
 
 var builder = WebApplication.CreateBuilder(args);
 

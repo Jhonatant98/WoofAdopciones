@@ -1,5 +1,5 @@
-﻿using MailKit.Net.Smtp;
-using MimeKit;
+﻿using MimeKit;
+using WoofAdopciones.Backend.Helpers.WoofAdopciones.Backend.Helpers;
 using WoofAdopciones.Shared.Responses;
 
 namespace WoofAdopciones.Backend.Helpers

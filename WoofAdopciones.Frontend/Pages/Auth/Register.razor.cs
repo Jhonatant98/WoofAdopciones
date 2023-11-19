@@ -105,6 +105,9 @@ namespace WoofAdopciones.Frontend.Pages.Auth
             userDTO.UserName = userDTO.Email;
             userDTO.UserType = UserType.User;
 
+            var cityResponse = await repository.GetAsync<City>($"/api/cities/{userDTO.CityId}");
+            userDTO.City = cityResponse.Response;
+
             if (IsAdmin)
             {
                 userDTO.UserType = UserType.Admin;

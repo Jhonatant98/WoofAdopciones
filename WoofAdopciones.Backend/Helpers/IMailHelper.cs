@@ -2,8 +2,11 @@
 
 namespace WoofAdopciones.Backend.Helpers
 {
-    public interface IMailHelper
+    namespace WoofAdopciones.Backend.Helpers
     {
-        Response<string> SendMail(string toName, string toEmail, string subject, string body);
+        public interface IMailHelper
+        {
+            Response<string> SendMail(string toName, string toEmail, string subject, string body);
+        }
     }
 }

@@ -1,11 +1,12 @@
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 using WoofAdopciones.Backend.Helpers;
+using WoofAdopciones.Backend.Helpers.WoofAdopciones.Backend.Helpers;
 using WoofAdopciones.Backend.Repositories;
 using WoofAdopciones.Shared.DTOs;
 using WoofAdopciones.Shared.Entities;
@@ -13,7 +14,6 @@ using WoofAdopciones.Shared.Responses;
 
 namespace WoofAdopciones.Backend.Controllers
 {
-
     [ApiController]
     [Route("/api/accounts")]
     public class AccountsController : ControllerBase
