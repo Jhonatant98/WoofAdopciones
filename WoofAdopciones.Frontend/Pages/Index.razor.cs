@@ -12,7 +12,6 @@ namespace WoofAdopciones.Frontend.Pages
     {
         private int currentPage = 1;
         private int totalPages;
-        private int counter = 0;
         private bool isAuthenticated;
         private string allCategories = "all_categories_list";
 
@@ -48,19 +47,9 @@ namespace WoofAdopciones.Frontend.Pages
             isAuthenticated = authenticationState.User.Identity!.IsAuthenticated;
         }
 
-        private async Task LoadCounterAsync()
+        protected override async Task OnParametersSetAsync()
         {
-            if (!isAuthenticated)
-            {
-                return;
-            }
-
-            //var responseHttp = await repository.GetAsync<int>("/api/temporalOrders/count");
-            //if (responseHttp.Error)
-            //{
-            //    return;
-            //}
-            //counter = responseHttp.Response;
+            await CheckIsAuthenticatedAsync();
         }
 
         private async Task SelectedPageAsync(int page)
@@ -154,7 +143,7 @@ namespace WoofAdopciones.Frontend.Pages
             await SelectedPageAsync(page);
         }
 
-        private async Task AddToCartAsync(int productId)
+        private async Task AddToCartAsync(int petId)
         {
             if (!isAuthenticated)
             {
@@ -170,20 +159,20 @@ namespace WoofAdopciones.Frontend.Pages
                 return;
             }
 
-            //var temporalOrderDTO = new TemporalOrderDTO
-            //{
-            //    ProductId = productId
-            //};
+            var adoptionDTO = new AdoptionDTO
+            {
+                PetId = petId
+            };
 
-            //var httpResponse = await repository.PostAsync("/api/temporalOrders/full", temporalOrderDTO);
-            //if (httpResponse.Error)
-            //{
-            //    var message = await httpResponse.GetErrorMessageAsync();
-            //    await sweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
-            //    return;
-            //}
+            var httpResponse = await repository.PostAsync("/api/Adoptions", adoptionDTO);
+            if (httpResponse.Error)
+            {
+                var message = await httpResponse.GetErrorMessageAsync();
+                await sweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+                return;
+            }
 
-            await LoadCounterAsync();
+            //await LoadCounterAsync();
 
             var toast2 = sweetAlertService.Mixin(new SweetAlertOptions
             {
@@ -192,7 +181,7 @@ namespace WoofAdopciones.Frontend.Pages
                 ShowConfirmButton = true,
                 Timer = 3000
             });
-            await toast2.FireAsync(icon: SweetAlertIcon.Success, message: "Producto agregado al carro de compras.");
+            await toast2.FireAsync(icon: SweetAlertIcon.Success, message: "Solicitud realizada con exito.");
         }
     }
 }

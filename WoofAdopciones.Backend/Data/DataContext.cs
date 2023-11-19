@@ -14,10 +14,10 @@ namespace WoofAdopciones.Backend.Data
         public DbSet<OrderType> OrderTypes { get; set; }
         public DbSet<AdoptionCenter> AdoptionCenters { get; set; }
         public DbSet<City> Cities { get; set; }
-
         public DbSet<Country> Countries { get; set; }
-
         public DbSet<State> States { get; set; }
+        public DbSet<Adoption> Adoptions { get; set; }
+
 
         public DbSet<Complaint> Complaints { get; set; }
 
