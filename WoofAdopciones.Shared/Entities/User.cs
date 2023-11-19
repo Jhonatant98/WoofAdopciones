@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
-using WoofAdopciones.Shared.Entities;
 using WoofAdopciones.Shared.Enums;
 
 namespace WoofAdopciones.Shared.Entities

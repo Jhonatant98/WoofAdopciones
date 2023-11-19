@@ -73,6 +73,8 @@ builder.Services.AddScoped<IAdoptionCenterRepository, AdoptionCenterRepository>(
 builder.Services.AddScoped<IOrderTypeRepository, OrderTypeRepository>();
 builder.Services.AddScoped<IPetsRepository, PetsRepository>();
 builder.Services.AddScoped<IUsersRepository, UsersRepository>();
+builder.Services.AddScoped<IAdoptionsRepository, AdoptionsRepository>();
+
 
 builder.Services.AddScoped<ICitiesUnitOfWork, CitiesUnitOfWork>();
 builder.Services.AddScoped<ICountriesUnitOfWork, CountriesUnitOfWork>();
@@ -81,6 +83,7 @@ builder.Services.AddScoped<IOrderTypeUnitOfWork, OrderTypeUnitOfWork>();
 builder.Services.AddScoped<IPetsUnitOfWork, PetsUnitOfWork>();
 builder.Services.AddScoped<IAdoptionCenterUnitOfWork, AdoptionCenterUnitOfWork>();
 builder.Services.AddScoped<IUsersUnitOfWork, UsersUnitOfWork>();
+builder.Services.AddScoped<IAdoptionsUnitOfWork, AdoptionsUnitOfWork>();
 
 builder.Services.AddTransient<SeedDb>();
 builder.Services.AddScoped<IApiService, ApiService>();
