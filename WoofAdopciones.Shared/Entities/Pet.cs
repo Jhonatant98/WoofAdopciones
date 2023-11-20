@@ -27,13 +27,13 @@ namespace WoofAdopciones.Shared.Entities
         [MaxLength(500, ErrorMessage = "El campo {0} debe tener máximo {1} caractéres.")]
         public string Description { get; set; } = null!;
 
-        [DisplayFormat(DataFormatString = "{0:N2}")]
-        [Display(Name = "Inventario")]
+        [Display(Name = "Estado")]
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
-        public float Stock { get; set; }
+        public bool state { get; set; } = true;
 
+        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd hh:mm tt}")]
         [Display(Name = "Fecha de Publicación")]
-        public DateTime CreatedOn { get; set; }
+        public DateTime CreatedOn { get; set; } = DateTime.UtcNow;
 
         public ICollection<PetImage>? PetImages { get; set; }
 

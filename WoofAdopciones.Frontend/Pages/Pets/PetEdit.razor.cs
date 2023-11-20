@@ -34,7 +34,7 @@ namespace WoofAdopciones.Frontend.Pages.Pets
 
         protected override async Task OnInitializedAsync()
         {
-            await LoadProductAsync();
+            await LoadPetAsync();
         }
 
         private async Task AddImageAsync()
@@ -101,7 +101,7 @@ namespace WoofAdopciones.Frontend.Pages.Pets
             await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Imagén eliminada con éxito.");
         }
 
-        private async Task LoadProductAsync()
+        private async Task LoadPetAsync()
         {
             loading = true;
             var httpResponse = await repository.GetAsync<Pet>($"/api/Pets/{PetId}");
@@ -127,7 +127,7 @@ namespace WoofAdopciones.Frontend.Pages.Pets
                 Id = pet.Id,
                 Name = pet.Name,
                 Color = pet.Color,
-                Stock = pet.Stock,
+                state = pet.state,
                 CreatedOn = pet.CreatedOn,
                 Age = pet.Age,
                 AdoptionCenterId = pet.AdoptionCenterId,

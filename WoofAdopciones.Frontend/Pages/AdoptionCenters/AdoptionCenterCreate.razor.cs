@@ -34,7 +34,6 @@ namespace WoofAdopciones.Frontend.Pages.AdoptionCenters
             return;
         }
 
-        await BlazoredModal.CloseAsync(ModalResult.Ok());
         Return();
 
         var toast = sweetAlertService.Mixin(new SweetAlertOptions

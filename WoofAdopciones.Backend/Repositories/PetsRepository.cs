@@ -28,11 +28,17 @@ namespace WoofAdopciones.Backend.Repositories
                 .Include(x => x.PetImages)
                 .AsQueryable();
 
+
+
             if (!string.IsNullOrWhiteSpace(pagination.Filter))
             {
                 queryable = queryable.Where(x => x.Name.ToLower().Contains(pagination.Filter.ToLower()));
             }
 
+            if (!string.IsNullOrWhiteSpace(pagination.StateFilter))
+            {
+                queryable = queryable.Where(x => x.state.Equals(bool.Parse(pagination.StateFilter)));
+            }
 
             return new Response<IEnumerable<Pet>>
             {
@@ -95,7 +101,7 @@ namespace WoofAdopciones.Backend.Repositories
                     Color = petDTO.Color,
                     CreatedOn = petDTO.CreatedOn,
                     Description = petDTO.Description,
-                    Stock = petDTO.Stock,
+                    state = petDTO.state,
                     PetImages = new List<PetImage>()
                 };
 
@@ -151,7 +157,7 @@ namespace WoofAdopciones.Backend.Repositories
                 pet.Color = petDTO.Color;
                 pet.CreatedOn = petDTO.CreatedOn;
                 pet.Description = petDTO.Description;
-                pet.Stock = petDTO.Stock;
+                pet.state = petDTO.state;
 
                 _context.Update(pet);
                 await _context.SaveChangesAsync();

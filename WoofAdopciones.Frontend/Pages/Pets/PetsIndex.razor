@@ -17,7 +17,7 @@
                             <th>Nombre</th>
                             <th>Descripción</th>
                             <th>Color</th>
-                            <th>Inventario</th>
+                            <th>Estado</th>
                             <th>Imagenes</th>
                             <th>Imagen Principal</th>
                             <th style="width:168px"></th>
@@ -37,7 +37,7 @@
                                     @pet.Color
                                 </td>
                                 <td>
-                                    @($"{pet.Stock:N2}")
+                                    @($"{pet.state:N2}")
                                 </td>
                                 <td>
                                     @pet.ProductImagesNumber
@@ -46,7 +46,7 @@
                                     <img src="@pet.MainImage" style="width:100px;" />
                                 </td>
                                 <td>
-                                <a class="btn btn-warning btn-sm" href="/pets/PetEdit/@pet.Id"><i class="oi oi-pencil" />Editar</a>
+                            <a class="btn btn-warning btn-sm" href="/pets/PetEdit/@pet.Id"><i class="oi oi-pencil" />Editar</a>
                                 <button class="btn btn-danger btn-sm" @onclick=@(() => DeleteAsync(pet.Id))>Borrar</button>
                         </td>
                     </tr>

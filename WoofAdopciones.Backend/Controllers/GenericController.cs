@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using WoofAdopciones.Backend.UnitsOfWork;
 using WoofAdopciones.Shared.DTOs;
 
@@ -12,7 +13,7 @@ namespace WoofAdopciones.Backend.Controllers
         {
             _unitOfWork = unitOfWork;
         }
-
+        [AllowAnonymous]
         [HttpGet]
         public virtual async Task<IActionResult> GetAsync([FromQuery] PaginationDTO pagination)
         {

@@ -45,7 +45,7 @@
                                 <td><a href="/countries/details/@country.Id"> @country.Name</a></td>
                                 <td>@country.StatesNumber</td>
                                 <td>
-                                    <a class="btn btn-warning btn-sm" href="/countries/edit/@country.Id"><i class="oi oi-pencil" /> Editar</a>
+                                    <a class="btn btn-warning btn-sm" href="//countries/CountryEdit/@country.Id"><i class="oi oi-pencil" /> Editar</a>
                                     <button class="btn btn-danger btn-sm" @onclick=@(() => DeleteAsync(country))><i class="oi oi-trash" /> Borrar</button>
                                 </td>
                             </tr>

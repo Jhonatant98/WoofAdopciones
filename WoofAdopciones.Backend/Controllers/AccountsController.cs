@@ -1,4 +1,6 @@
 using System.IdentityModel.Tokens.Jwt;
+using System.Numerics;
+using System.Reflection.Metadata;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -10,6 +12,7 @@ using WoofAdopciones.Backend.Helpers.WoofAdopciones.Backend.Helpers;
 using WoofAdopciones.Backend.Repositories;
 using WoofAdopciones.Shared.DTOs;
 using WoofAdopciones.Shared.Entities;
+using WoofAdopciones.Shared.Enums;
 using WoofAdopciones.Shared.Responses;
 
 namespace WoofAdopciones.Backend.Controllers
@@ -60,7 +63,20 @@ namespace WoofAdopciones.Backend.Controllers
         [HttpPost("CreateUser")]
         public async Task<IActionResult> CreateUser([FromBody] UserDTO model)
         {
-            User user = model;
+            User user = new User
+            {
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                Email = model.Email,
+                UserName = model.Email,
+                PhoneNumber = model.PhoneNumber,
+                Address = model.Address,
+                Document = model.Document,
+                City = model.City,
+                UserType = model.UserType,
+                Photo = model.Photo,
+            };
+
             if (!string.IsNullOrEmpty(model.Photo))
             {
                 var photoUser = Convert.FromBase64String(model.Photo);

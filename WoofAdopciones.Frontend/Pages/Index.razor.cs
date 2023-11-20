@@ -24,6 +24,8 @@ namespace WoofAdopciones.Frontend.Pages
         public List<Pet>? Pets { get; set; }
         public List<AdoptionCenter>? AdoptionCenters { get; set; }
         public string AdoptionCenterFilter { get; set; } = string.Empty;
+        public string StateFilter { get; set; } = "true";
+
 
         [CascadingParameter]
         private Task<AuthenticationState> authenticationStateTask { get; set; } = null!;
@@ -87,14 +89,18 @@ namespace WoofAdopciones.Frontend.Pages
 
         private async Task<bool> LoadListAsync(int page)
         {
-            var url = $"api/Pets?page={page}&RecordsNumber=8";
+            var url = $"api/Pets?page={page}&RecordsNumber=8&filter={Filter}";
             if (!string.IsNullOrEmpty(Filter))
             {
                 url += $"&filter={Filter}";
             }
+            if (!string.IsNullOrEmpty(StateFilter))
+            {
+                url += $"&StateFilter={StateFilter}";
+            }
             if (!string.IsNullOrEmpty(AdoptionCenterFilter))
             {
-                url += $"&CategoryFilter={AdoptionCenterFilter}";
+                url += $"&AdoptionCenterFilter={AdoptionCenterFilter}";
             }
 
             var response = await repository.GetAsync<List<Pet>>(url);
@@ -143,7 +149,7 @@ namespace WoofAdopciones.Frontend.Pages
             await SelectedPageAsync(page);
         }
 
-        private async Task AddToCartAsync(int petId)
+        private async Task AddToCartAsync(Pet pet)
         {
             if (!isAuthenticated)
             {
@@ -161,7 +167,7 @@ namespace WoofAdopciones.Frontend.Pages
 
             var adoptionDTO = new AdoptionDTO
             {
-                PetId = petId
+                PetId = pet.Id
             };
 
             var httpResponse = await repository.PostAsync("/api/Adoptions", adoptionDTO);
@@ -171,6 +177,17 @@ namespace WoofAdopciones.Frontend.Pages
                 await sweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
                 return;
             }
+
+            PetDTO petDTO = ToPetDTO(pet);
+
+            var httpResponsePet = await repository.PutAsync("/api/Pets/full", petDTO);
+            if (httpResponsePet.Error)
+            {
+                var message = await httpResponse.GetErrorMessageAsync();
+                await sweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+                return;
+            }
+
 
             //await LoadCounterAsync();
 
@@ -182,6 +199,24 @@ namespace WoofAdopciones.Frontend.Pages
                 Timer = 3000
             });
             await toast2.FireAsync(icon: SweetAlertIcon.Success, message: "Solicitud realizada con exito.");
+
+            await LoadAsync();
+        }
+
+        private PetDTO ToPetDTO(Pet pet)
+        {
+            return new PetDTO
+            {
+                Description = pet.Description,
+                Id = pet.Id,
+                Name = pet.Name,
+                Color = pet.Color,
+                state = false,
+                CreatedOn = pet.CreatedOn,
+                Age = pet.Age,
+                AdoptionCenterId = pet.AdoptionCenterId,
+                PetImages = pet.PetImages!.Select(x => x.Image).ToList()
+            };
         }
     }
 }

@@ -181,6 +181,8 @@ namespace WoofAdopciones.Backend.Repositories
             };
 
             _context.Add(adoption);
+            await _context.SaveChangesAsync();
+
             return new Response<bool>
             {
                 WasSuccess = true,

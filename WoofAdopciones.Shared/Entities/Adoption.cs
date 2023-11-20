@@ -18,7 +18,7 @@ namespace WoofAdopciones.Shared.Entities
         public string? Remarks { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd hh:mm tt}")]
-        [Display(Name = "Inventario")]
+        [Display(Name = "Fecha de creacion")]
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
         public DateTime Date { get; set; }
     }
