@@ -63,19 +63,7 @@ namespace WoofAdopciones.Backend.Controllers
         [HttpPost("CreateUser")]
         public async Task<IActionResult> CreateUser([FromBody] UserDTO model)
         {
-            User user = new User
-            {
-                FirstName = model.FirstName,
-                LastName = model.LastName,
-                Email = model.Email,
-                UserName = model.Email,
-                PhoneNumber = model.PhoneNumber,
-                Address = model.Address,
-                Document = model.Document,
-                City = model.City,
-                UserType = model.UserType,
-                Photo = model.Photo,
-            };
+            User user = model;
 
             if (!string.IsNullOrEmpty(model.Photo))
             {
