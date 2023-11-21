@@ -1,0 +1,63 @@
+﻿@page "/Adoptions"
+
+@if (Adoptions is null)
+{
+    <Loading />
+}
+else
+{
+    <GenericList MyList="Adoptions">
+        <Body>
+            <div class="card">
+                <div class="card-header">
+                    <span>
+                        <i class="oi oi-dollar" /> Solicitudes de adopción
+                    </span>
+                </div>
+                <div class="card-body">
+                    <Pagination CurrentPage="currentPage"
+                                TotalPages="totalPages"
+                                SelectedPage="SelectedPageAsync" />
+
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Usuario</th>
+                                <th>Mascota</th>
+                                <th>Estado</th>
+                                <th>Comentarios</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var adoption in Adoptions)
+                            {
+                                <tr>
+                                    <td>
+                                        @($"{adoption.Date:yyyy/MM/dd hh:mm tt}")
+                                    </td>
+                                    <td>
+                                        @adoption.User!.FullName
+                                    </td>
+                                    <td>
+                                        @adoption.Pet!.Name
+                                    </td>
+                                    <td>
+                                        @EnumHelper.GetEnumDescription(adoption.AdoptionStatus)
+                                    </td>
+                                    <td>
+                                        @adoption.Remarks
+                                    </td>
+                                    <td>
+                                        <a href="/Adoptions/AdoptionDetails/@adoption.Id" class="btn btn-info btn-sm"><i class="oi oi-info" /> Detalles</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </Body>
+    </GenericList>
+}

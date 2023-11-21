@@ -35,6 +35,7 @@ namespace WoofAdopciones.Backend.Repositories
             }
 
             var queryable = _context.Adoptions
+                .Include(s => s.Pet)
                 .Include(s => s.User!)
                 .AsQueryable();
 
@@ -86,11 +87,14 @@ namespace WoofAdopciones.Backend.Repositories
         public override async Task<Response<Adoption>> GetAsync(int id)
         {
             var adoption = await _context.Adoptions
+                .Include(s => s.Pet)
                 .Include(s => s.User!)
                 .ThenInclude(u => u.City!)
                 .ThenInclude(c => c.State!)
                 .ThenInclude(s => s.Country)
                 .FirstOrDefaultAsync(s => s.Id == id);
+
+
 
             if (adoption == null)
             {

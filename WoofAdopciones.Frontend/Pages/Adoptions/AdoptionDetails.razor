@@ -1,0 +1,52 @@
+﻿@page "/Adoptions/AdoptionDetails/{adoptionId:int}"
+
+@if (adoption is null)
+{
+    <Loading />
+}
+else
+{
+  
+            <div class="card">
+                <div class="card-header">
+                    <span>
+                <i class="bi bi-paw"></i> @adoption.Pet.Name
+                        @if (adoption.AdoptionStatus == AdoptionStatus.InReview)
+                        {
+                            <button class="btn btn-sm btn-danger float-end mx-2" @onclick=@(() => CancelOrderAsync())><i class="oi oi-trash" /> Cancelar</button>
+                            <AuthorizeView Roles="Admin">
+                                <Authorized>
+                                    <button class="btn btn-sm btn-primary float-end mx-2" @onclick=@(() => DispatchOrderAsync())><i class="oi oi-external-link" /> Despachar</button>
+                                </Authorized>
+                            </AuthorizeView>
+                        }
+                        <AuthorizeView Roles="Admin">
+                            <Authorized>
+                                @if (adoption.AdoptionStatus == AdoptionStatus.GoHome)
+                                {
+                                    <button class="btn btn-sm btn-warning float-end mx-2" @onclick=@(() => SendOrderAsync())><i class="oi oi-location" /> Enviar</button>
+                                }
+                                
+                            </Authorized>
+                        </AuthorizeView>
+                        <a class="btn btn-sm btn-success float-end" href="/Adoptions"><i class="oi oi-arrow-thick-left" /> Regresar</a>
+                    </span>
+                </div>
+                <div class="row mx-2 my-2">
+                    <div class="col-2">
+                        <p>Cliente</p>
+                        <p>Documento</p>
+                        <p>Teléfono</p>
+                        <p>Email</p>
+                        <p>Dirección</p>
+                    </div>
+                    <div class="col-4">
+                        <p><strong>@adoption.User.FullName</strong></p>
+                        <p><strong>@adoption.User.Document</strong></p>
+                        <p><strong>@adoption.User.PhoneNumber</strong></p>
+                        <p><strong>@adoption.User.UserName</strong></p>
+                        <p><strong>@adoption.User.Address, @adoption.User.City!.Name, @adoption.User.City.State!.Name, @adoption.User.City.State.Country!.Name</strong></p>
+                    </div>
+                </div>
+            </div>
+}
