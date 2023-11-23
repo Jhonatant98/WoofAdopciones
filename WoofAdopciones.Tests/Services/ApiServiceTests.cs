@@ -32,7 +32,7 @@ namespace WoofAdopciones.Tests.Service
             _apiService = new ApiService(_configurationMock.Object, client);
         }
 
-       // [TestMethod]
+        [TestMethod]
         public async Task GetAsync_SuccessfulRequest_ReturnsSuccessResponse()
         {
             // Arrange
@@ -61,7 +61,7 @@ namespace WoofAdopciones.Tests.Service
             Assert.AreEqual(expectedResponse.Data, ((JsonElement)response.Result).GetProperty("Data").GetString());
         }
 
-      //  [TestMethod]
+       [TestMethod]
         public async Task GetAsync_UnsuccessfulRequest_ReturnsErrorResponse()
         {
             // Arrange

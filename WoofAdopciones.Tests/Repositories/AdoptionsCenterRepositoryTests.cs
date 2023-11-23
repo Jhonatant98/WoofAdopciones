@@ -39,7 +39,7 @@ namespace WoofAdopciones.Tests.Repositories
             _context.Dispose();
         }
 
-       // [TestMethod]
+        [TestMethod]
         public async Task GetAsync_ReturnsFilteredCategories()
         {
             // Arrange
@@ -50,9 +50,9 @@ namespace WoofAdopciones.Tests.Repositories
 
             // Assert
             Assert.IsTrue(response.WasSuccess);
-            var categories = response.Result!.ToList();
-            Assert.AreEqual(0, categories.Count);
-            Assert.AreEqual("Cartagena", categories.First().Name);
+            var AdoptionCenter = response.Result!.ToList();
+            Assert.AreEqual(1, AdoptionCenter.Count);
+            Assert.AreEqual("Cartagena", AdoptionCenter.First().Name);
         }
 
         [TestMethod]
@@ -67,17 +67,17 @@ namespace WoofAdopciones.Tests.Repositories
             // Assert
             Assert.IsTrue(response.WasSuccess);
             var categories = response.Result!.ToList();
-            Assert.AreEqual(0, categories.Count);
+            Assert.AreEqual(3, categories.Count);
         }
 
         [TestMethod]
-        public async Task GetComboAsync_ReturnsAllCategories()
+        public async Task GetComboAsync_ReturnsAll()
         {
             // Act
             var categories = await _repository.GetComboAsync();
 
             // Assert
-            Assert.AreEqual(0, categories.Count());
+            Assert.AreEqual(3, categories.Count());
         }
 
         [TestMethod]
