@@ -1,12 +1,48 @@
 ﻿@page "/"
 
+
+ @if(Pets is null)
+{
+<Loading />
+}
+else
+{
 <PageTitle>WoofAdopciones</PageTitle>
 
-<AuthorizeView Roles="Admin">
-    <Authorized>
-        <p>Estas autenticado y autorizado, @context.User.Identity?.Name</p>
-    </Authorized>
-    <NotAuthorized>
-        <p>No estas autorizado</p>
-    </NotAuthorized>
-</AuthorizeView>
+ if (Pets.Count > 0)
+    {
+<div class="d-flex justify-content-center">
+    <Pagination CurrentPage="currentPage"
+                TotalPages="totalPages"
+                SelectedPage="SelectedPageAsync" />
+</div>
+
+<div class="row row-cols-1 row-cols-md-4 g-4 mt-1">
+    @foreach (var pet in Pets!)
+    {
+        <div class="col">
+            <div class="card h-100">
+                <div class="text-center zoom">
+                    <img src="@pet.MainImage" style="height:150px; max-width:200px;" class="text-center" alt=@pet.Name />
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title text-navy"> @pet.Name</h5>
+                    <p class="card-text smfnt">@pet.Description</p>
+                    <h5 class="text-muted">@pet.Color</h5>
+                </div>
+                <div class="card-footer text-center">
+                    <a href="/products/details/@pet.Id" class="btn btn-sm btn-secondary"><i class="oi oi-info" /> Detalles</a>
+                    <button class="btn btn-sm btn-primary" @onclick=@(() => AddToCartAsync(pet))><i class="oi oi-plus" /> Adoptar </button>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+    }
+    else
+    {
+<div class="d-flex justify-content-center align-items-center" style="height: 30vh;">
+    <h1>Lo sentimos, no hay mascotas disponibles con estos criterios de búsqueda</h1>
+</div>
+    }
+}

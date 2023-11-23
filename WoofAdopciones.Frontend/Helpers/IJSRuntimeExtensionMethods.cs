@@ -19,5 +19,4 @@ namespace WoofAdopciones.Frontend.Helpers
             return js.InvokeAsync<object>("localStorage.removeItem", key);
         }
     }
-
 }

@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using WoofAdopciones.Backend.Data;
-using WoofAdopciones.Backend.Interfaces;
 using WoofAdopciones.Backend.Repositories;
 using WoofAdopciones.Backend.Services;
 using WoofAdopciones.Backend.UnitsOfWork;
@@ -12,6 +11,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Text.Json.Serialization;
+using Microsoft.Extensions.Azure;
+using WoofAdopciones.Backend.Helpers.WoofAdopciones.Backend.Helpers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -56,10 +57,42 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 builder.Services.AddDbContext<DataContext>(x => x.UseSqlServer("name=LocalConnection"));
+builder.Services.AddScoped<IMailHelper, MailHelper>();
+builder.Services.AddScoped<ISmtpClient, SmtpClientWrapper>();
+builder.Services.AddScoped<HttpClient>();
+builder.Services.AddScoped<IBlobContainerClientFactory, BlobContainerClientFactory>();
+builder.Services.AddScoped<IRuntimeInformationWrapper, RuntimeInformationWrapper>();
+
 builder.Services.AddScoped(typeof(IGenericUnitOfWork<>), typeof(GenericUnitOfWork<>));
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-builder.Services.AddScoped<IApiService, ApiService>();
+
+builder.Services.AddScoped<ICitiesRepository, CitiesRepository>();
+builder.Services.AddScoped<ICountriesRepository, CountriesRepository>();
+builder.Services.AddScoped<IStatesRepository, StatesRepository>();
+
+builder.Services.AddScoped<IAdoptionCenterRepository, AdoptionCenterRepository>();
+builder.Services.AddScoped<IOrderTypeRepository, OrderTypeRepository>();
+builder.Services.AddScoped<IPetsRepository, PetsRepository>();
+builder.Services.AddScoped<IUsersRepository, UsersRepository>();
+builder.Services.AddScoped<IAdoptionsRepository, AdoptionsRepository>();
+builder.Services.AddScoped<IAVolunteringsRepository, VolunteringRepository>();
+
+
+builder.Services.AddScoped<ICitiesUnitOfWork, CitiesUnitOfWork>();
+builder.Services.AddScoped<ICountriesUnitOfWork, CountriesUnitOfWork>();
+builder.Services.AddScoped<IStatesUnitOfWork, StatesUnitOfWork>();
+builder.Services.AddScoped<IOrderTypeUnitOfWork, OrderTypeUnitOfWork>();
+builder.Services.AddScoped<IPetsUnitOfWork, PetsUnitOfWork>();
+builder.Services.AddScoped<IAdoptionCenterUnitOfWork, AdoptionCenterUnitOfWork>();
+builder.Services.AddScoped<IUsersUnitOfWork, UsersUnitOfWork>();
+builder.Services.AddScoped<IAdoptionsUnitOfWork, AdoptionsUnitOfWork>();
+builder.Services.AddScoped<IAVolunteringsUnitOfWork, VolunteringsUnitOfWork>();
+
+
 builder.Services.AddTransient<SeedDb>();
+builder.Services.AddScoped<IApiService, ApiService>();
+builder.Services.AddScoped<IUserHelper, UserHelper>();
+builder.Services.AddScoped<IFileStorage, FileStorage>();
 
 builder.Services.AddIdentity<User, IdentityRole>(x =>
 {
@@ -89,8 +122,11 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         ClockSkew = TimeSpan.Zero
     });
 
-builder.Services.AddScoped<IFileStorage, FileStorage>();
-builder.Services.AddScoped<IMailHelper, MailHelper>();
+builder.Services.AddAzureClients(clientBuilder =>
+{
+    clientBuilder.AddBlobServiceClient(builder.Configuration["ConnectionStrings:AzureStorage:blob"]);
+    clientBuilder.AddQueueServiceClient(builder.Configuration["ConnectionStrings:AzureStorage:queue"]);
+});
 
 var app = builder.Build();
 SeedData(app);
@@ -112,7 +148,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 

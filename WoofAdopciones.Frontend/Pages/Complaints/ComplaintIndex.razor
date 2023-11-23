@@ -1,0 +1,111 @@
+﻿@page "/Complaint"
+@attribute [Authorize(Roles = "Admin")]
+@inject IRepository repository
+@inject SweetAlertService sweetAlertService
+
+<h3>Denuncias</h3>
+@if (complaints is null)
+{
+    <Loading />
+}
+else
+{
+    <Pagination CurrentPage="currentPage"
+                TotalPages="totalPages"
+                SelectedPage="SelectedPageAsync" />
+
+    <GenericList MyList="complaints!">
+        <Body>
+            <table style="width: 100%; border-collapse: collapse; margin-top: 20px;" class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Descripción</th>
+                        <th>Dirección</th>
+                        <th>Ubicación</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var complaint in complaints!)
+                    {
+                        <tr>
+                            <td>@complaint.Description</td>
+                            <td>@complaint.Address</td>
+                            <td>@complaint.City!.Name</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        </Body>
+    </GenericList>
+}
+
+@code {
+    private List<Complaint>? complaints;
+    private int currentPage = 1;
+    private int totalPages;
+
+    [Parameter]
+    [SupplyParameterFromQuery]
+    public string Page { get; set; } = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadAsync();
+    }
+
+    private async Task LoadAsync(int page = 1)
+    {
+        if (!string.IsNullOrWhiteSpace(Page))
+        {
+            page = Convert.ToInt32(Page);
+        }
+
+        var ok = await LoadListAsync(page);
+        if (ok)
+        {
+            await LoadPagesAsync();
+        }
+    }
+    private async Task SelectedPageAsync(int page)
+    {
+        currentPage = page;
+        await LoadAsync(page);
+    }
+
+    private async Task<bool> LoadPagesAsync()
+    {
+        var url = $"api/Complaints/totalPages";
+
+        var response = await repository.GetAsync<int>(url);
+        if (response.Error)
+        {
+            var message = await response.GetErrorMessageAsync();
+            await sweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+            return false;
+        }
+        totalPages = response.Response;
+        return true;
+    }
+
+    private async Task<bool> LoadListAsync(int page)
+    {
+        var url = $"api/Complaints?page={page}";
+
+        var response = await repository.GetAsync<List<Complaint>>(url);
+        if (response.Error)
+        {
+            var message = await response.GetErrorMessageAsync();
+            await sweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+            return false;
+        }
+        complaints = response.Response;
+        foreach (Complaint c in complaints!)
+        {
+            var cityResponse = await repository.GetAsync<City>($"/api/cities/{c.CityId}");
+            c.City = cityResponse.Response;
+        }
+        return true;
+    }
+
+}

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WoofAdopciones.Backend.Data;
-using WoofAdopciones.Backend.Interfaces;
+using WoofAdopciones.Backend.UnitsOfWork;
 using WoofAdopciones.Shared.DTOs;
 using WoofAdopciones.Shared.Entities;
 using WoofAdopciones.Shared.Helpers;
@@ -15,70 +15,51 @@ namespace WoofAdopciones.Backend.Controllers
     [Route("api/[controller]")]
     public class StatesController : GenericController<State>
     {
-        private readonly DataContext _context;
+        private readonly IStatesUnitOfWork _statesUnitOfWork;
 
-        public StatesController(IGenericUnitOfWork<State> unitOfWork, DataContext context) : base(unitOfWork, context)
+        public StatesController(IGenericUnitOfWork<State> unitOfWork, IStatesUnitOfWork statesUnitOfWork) : base(unitOfWork)
         {
-            _context = context;
+            _statesUnitOfWork = statesUnitOfWork;
         }
 
         [AllowAnonymous]
         [HttpGet("combo/{countryId:int}")]
-        public async Task<ActionResult> GetComboAsync(int countryId)
+        public async Task<IActionResult> GetComboAsync(int countryId)
         {
-            return Ok(await _context.States
-                .Where(s => s.CountryId == countryId)
-                .OrderBy(s => s.Name)
-                .ToListAsync());
+            return Ok(await _statesUnitOfWork.GetComboAsync(countryId));
         }
 
         [HttpGet]
         public override async Task<IActionResult> GetAsync([FromQuery] PaginationDTO pagination)
         {
-            var queryable = _context.States
-                .Include(x => x.Cities)
-                .Where(x => x.Country!.Id == pagination.Id)
-                .AsQueryable();
-
-            if (!string.IsNullOrWhiteSpace(pagination.Filter))
+            var response = await _statesUnitOfWork.GetAsync(pagination);
+            if (response.WasSuccess)
             {
-                queryable = queryable.Where(x => x.Name.ToLower().Contains(pagination.Filter.ToLower()));
+                return Ok(response.Result);
             }
-
-            return Ok(await queryable
-                .OrderBy(x => x.Name)
-                .Paginate(pagination)
-                .ToListAsync());
+            return BadRequest();
         }
 
         [HttpGet("totalPages")]
-        public override async Task<ActionResult> GetPagesAsync([FromQuery] PaginationDTO pagination)
+        public override async Task<IActionResult> GetPagesAsync([FromQuery] PaginationDTO pagination)
         {
-            var queryable = _context.States
-                .Where(x => x.Country!.Id == pagination.Id)
-                .AsQueryable();
-
-            if (!string.IsNullOrWhiteSpace(pagination.Filter))
+            var action = await _statesUnitOfWork.GetTotalPagesAsync(pagination);
+            if (action.WasSuccess)
             {
-                queryable = queryable.Where(x => x.Name.ToLower().Contains(pagination.Filter.ToLower()));
+                return Ok(action.Result);
             }
-
-            double count = await queryable.CountAsync();
-            double totalPages = Math.Ceiling(count / pagination.RecordsNumber);
-            return Ok(totalPages);
+            return BadRequest();
         }
 
         [HttpGet("{id}")]
         public override async Task<IActionResult> GetAsync(int id)
         {
-            var state = await _context.States
-                .Include(s => s.Cities)
-                .FirstOrDefaultAsync(s => s.Id == id);
-            if (state == null)
+            var response = await _statesUnitOfWork.GetAsync(id);
+            if (response.WasSuccess)
             {
-                return NotFound();
+                return Ok(response.Result);
             }
-            return Ok(state);
+            return NotFound(response.Message);
         }
     }
 }

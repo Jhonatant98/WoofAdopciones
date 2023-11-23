@@ -1,111 +1,137 @@
+using System.IdentityModel.Tokens.Jwt;
+using System.Numerics;
+using System.Reflection.Metadata;
+using System.Security.Claims;
+using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 using WoofAdopciones.Backend.Helpers;
+using WoofAdopciones.Backend.Helpers.WoofAdopciones.Backend.Helpers;
+using WoofAdopciones.Backend.Repositories;
 using WoofAdopciones.Shared.DTOs;
 using WoofAdopciones.Shared.Entities;
+using WoofAdopciones.Shared.Enums;
 using WoofAdopciones.Shared.Responses;
 
 namespace WoofAdopciones.Backend.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("/api/accounts")]
     public class AccountsController : ControllerBase
     {
         private readonly IUserHelper _userHelper;
         private readonly IConfiguration _configuration;
         private readonly IFileStorage _fileStorage;
         private readonly IMailHelper _mailHelper;
+        private readonly IUsersRepository _usersRepository;
         private readonly string _container;
 
-        public AccountsController(IUserHelper userHelper, IConfiguration configuration, IFileStorage fileStorage, IMailHelper mailHelper)
+        public AccountsController(IUserHelper userHelper, IConfiguration configuration, IFileStorage fileStorage, IMailHelper mailHelper, IUsersRepository usersRepository)
         {
             _userHelper = userHelper;
             _configuration = configuration;
             _fileStorage = fileStorage;
-            _container = "users";
             _mailHelper = mailHelper;
+            _usersRepository = usersRepository;
+            _container = "users";
         }
 
-        [HttpPost("RecoverPassword")]
-        public async Task<ActionResult> RecoverPassword([FromBody] EmailDTO model)
+        [HttpGet("all")]
+        public async Task<IActionResult> GetAsync([FromQuery] PaginationDTO pagination)
         {
-            var user = await _userHelper.GetUserAsync(model.Email);
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            var myToken = await _userHelper.GeneratePasswordResetTokenAsync(user);
-            var tokenLink = Url.Action("ResetPassword", "accounts", new
-            {
-                userid = user.Id,
-                token = myToken
-            }, HttpContext.Request.Scheme, _configuration["Url Frontend"]);
-
-            var response = _mailHelper.SendMail(user.FullName, user.Email!,
-                $"WoofAdopciones - Recuperación de contraseña",
-                $"<h1>WoofAdopciones - Recuperación de contraseña</h1>" +
-                $"<p>Para recuperar su contraseña, por favor hacer clic 'Recuperar Contraseña':</p>" +
-                $"<b><a href ={tokenLink}>Recuperar Contraseña</a></b>");
-
+            var response = await _usersRepository.GetAsync(pagination);
             if (response.WasSuccess)
             {
-                return NoContent();
+                return Ok(response.Result);
             }
-
-            return BadRequest(response.Message);
+            return BadRequest();
         }
 
-        [HttpPost("ResetPassword")]
-        public async Task<ActionResult> ResetPassword([FromBody] ResetPasswordDTO model)
+        [HttpGet("totalPages")]
+        public async Task<IActionResult> GetPagesAsync([FromQuery] PaginationDTO pagination)
         {
-            var user = await _userHelper.GetUserAsync(model.Email);
-            if (user == null)
+            var action = await _usersRepository.GetTotalPagesAsync(pagination);
+            if (action.WasSuccess)
             {
-                return NotFound();
+                return Ok(action.Result);
+            }
+            return BadRequest();
+        }
+
+        [HttpPost("CreateUser")]
+        public async Task<IActionResult> CreateUser([FromBody] UserDTO model)
+        {
+            User user = model;
+
+            if (!string.IsNullOrEmpty(model.Photo))
+            {
+                var photoUser = Convert.FromBase64String(model.Photo);
+                model.Photo = await _fileStorage.SaveFileAsync(photoUser, ".jpg", _container);
             }
 
-            var result = await _userHelper.ResetPasswordAsync(user, model.Token, model.Password);
+            var result = await _userHelper.AddUserAsync(user, model.Password);
             if (result.Succeeded)
             {
-                return NoContent();
+                await _userHelper.AddUserToRoleAsync(user, user.UserType.ToString());
+                var response = await SendConfirmationEmailAsync(user);
+                if (response.WasSuccess)
+                {
+                    return NoContent();
+                }
+
+                return BadRequest(response.Message);
             }
 
-            return BadRequest(result.Errors.FirstOrDefault()!.Description);
+            return BadRequest(result.Errors.FirstOrDefault());
         }
 
-        [HttpPost("changePassword")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<ActionResult> ChangePasswordAsync(ChangePasswordDTO model)
+        [HttpGet("ConfirmEmail")]
+        public async Task<IActionResult> ConfirmEmailAsync(string userId, string token)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var user = await _userHelper.GetUserAsync(User.Identity!.Name!);
+            token = token.Replace(" ", "+");
+            var user = await _userHelper.GetUserAsync(new Guid(userId));
             if (user == null)
             {
                 return NotFound();
             }
 
-            var result = await _userHelper.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
+            var result = await _userHelper.ConfirmEmailAsync(user, token);
             if (!result.Succeeded)
             {
-                return BadRequest(result.Errors.FirstOrDefault()!.Description);
+                return BadRequest(result.Errors.FirstOrDefault());
             }
 
             return NoContent();
         }
 
+        [HttpPost("Login")]
+        public async Task<IActionResult> LoginAsync([FromBody] LoginDTO model)
+        {
+            var result = await _userHelper.LoginAsync(model);
+            if (result.Succeeded)
+            {
+                var user = await _userHelper.GetUserAsync(model.Email);
+                return Ok(BuildToken(user));
+            }
+
+            if (result.IsLockedOut)
+            {
+                return BadRequest("Ha superado el máximo número de intentos, su cuenta está bloqueada, intente de nuevo en 5 minutos.");
+            }
+
+            if (result.IsNotAllowed)
+            {
+                return BadRequest("El usuario no ha sido habilitado, debes de seguir las instrucciones del correo enviado para poder habilitar el usuario.");
+            }
+
+            return BadRequest("Email o contraseña incorrectos.");
+        }
+
         [HttpPut]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<ActionResult> PutAsync(User user)
+        public async Task<IActionResult> PutAsync(User user)
         {
             try
             {
@@ -133,7 +159,6 @@ namespace WoofAdopciones.Backend.Controllers
                 if (result.Succeeded)
                 {
                     return Ok(BuildToken(currentUser));
-
                 }
 
                 return BadRequest(result.Errors.FirstOrDefault());
@@ -144,66 +169,87 @@ namespace WoofAdopciones.Backend.Controllers
             }
         }
 
+        [HttpPost("RecoverPassword")]
+        public async Task<IActionResult> RecoverPasswordAsync([FromBody] EmailDTO model)
+        {
+            var user = await _userHelper.GetUserAsync(model.Email);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var myToken = await _userHelper.GeneratePasswordResetTokenAsync(user);
+            var tokenLink = Url.Action("ResetPassword", "accounts", new
+            {
+                userid = user.Id,
+                token = myToken
+            }, HttpContext.Request.Scheme, _configuration["Url Frontend"]);
+
+            var response = _mailHelper.SendMail(user.FullName, user.Email!,
+                $"Orders - Recuperación de contraseña",
+                $"<h1>Orders - Recuperación de contraseña</h1>" +
+                $"<p>Para recuperar su contraseña, por favor hacer clic 'Recuperar Contraseña':</p>" +
+                $"<b><a href ={tokenLink}>Recuperar Contraseña</a></b>");
+
+            if (response.WasSuccess)
+            {
+                return NoContent();
+            }
+
+            return BadRequest(response.Message);
+        }
+
+        [HttpPost("ResetPassword")]
+        public async Task<IActionResult> ResetPasswordAsync([FromBody] ResetPasswordDTO model)
+        {
+            var user = await _userHelper.GetUserAsync(model.Email);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var result = await _userHelper.ResetPasswordAsync(user, model.Token, model.Password);
+            if (result.Succeeded)
+            {
+                return NoContent();
+            }
+
+            return BadRequest(result.Errors.FirstOrDefault()!.Description);
+        }
 
         [HttpGet]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<ActionResult> GetAsync()
+        public async Task<IActionResult> GetAsync()
         {
             return Ok(await _userHelper.GetUserAsync(User.Identity!.Name!));
         }
 
-        [HttpPost("CreateUser")]
-        public async Task<ActionResult> CreateUserAsync([FromBody] UserDTO model)
+        [HttpPost("changePassword")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> ChangePasswordAsync(ChangePasswordDTO model)
         {
-            User user = model;
-           
-            if (!string.IsNullOrEmpty(model.Photo))
+            if (!ModelState.IsValid)
             {
-                var photoUser = Convert.FromBase64String(model.Photo);
-                model.Photo = await _fileStorage.SaveFileAsync(photoUser, ".jpg", _container);
+                return BadRequest(ModelState);
             }
 
-            var result = await _userHelper.AddUserAsync(user, model.Password);
-            if (result.Succeeded)
+            var user = await _userHelper.GetUserAsync(User.Identity!.Name!);
+            if (user == null)
             {
-                await _userHelper.AddUserToRoleAsync(user, user.UserType.ToString());
-                var response = await SendConfirmationEmailAsync(user);
-                if (response.WasSuccess)
-                {
-                    return NoContent();
-                }
-
-                return BadRequest(response.Message);
+                return NotFound();
             }
 
-            return BadRequest(result.Errors.FirstOrDefault());
-        }
-
-        [HttpPost("Login")]
-        public async Task<ActionResult> LoginAsync([FromBody] LoginDTO model)
-        {
-            var result = await _userHelper.LoginAsync(model);
-            if (result.Succeeded)
+            var result = await _userHelper.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
+            if (!result.Succeeded)
             {
-                var user = await _userHelper.GetUserAsync(model.Email);
-                return Ok(BuildToken(user));
+                return BadRequest(result.Errors.FirstOrDefault()!.Description);
             }
 
-            if (result.IsLockedOut)
-            {
-                return BadRequest("Ha superado el máximo número de intentos, su cuenta está bloqueada, intente de nuevo en 5 minutos.");
-            }
-
-            if (result.IsNotAllowed)
-            {
-                return BadRequest("El usuario no ha sido habilitado, debes de seguir las instrucciones del correo enviado para poder habilitar el usuario.");
-            }
-
-            return BadRequest("Email o contraseña incorrectos.");
+            return NoContent();
         }
 
         [HttpPost("ResedToken")]
-        public async Task<ActionResult> ResedToken([FromBody] EmailDTO model)
+        public async Task<IActionResult> ResedTokenAsync([FromBody] EmailDTO model)
         {
             User user = await _userHelper.GetUserAsync(model.Email);
             if (user == null)
@@ -218,41 +264,6 @@ namespace WoofAdopciones.Backend.Controllers
             }
 
             return BadRequest(response.Message);
-        }
-
-
-        [HttpGet("ConfirmEmail")]
-        public async Task<ActionResult> ConfirmEmailAsync(string userId, string token)
-        {
-            token = token.Replace(" ", "+");
-            var user = await _userHelper.GetUserAsync(new Guid(userId));
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            var result = await _userHelper.ConfirmEmailAsync(user, token);
-            if (!result.Succeeded)
-            {
-                return BadRequest(result.Errors.FirstOrDefault());
-            }
-
-            return NoContent();
-        }
-        private async Task<Response<string>> SendConfirmationEmailAsync(User user)
-        {
-            var myToken = await _userHelper.GenerateEmailConfirmationTokenAsync(user);
-            var tokenLink = Url.Action("ConfirmEmail", "accounts", new
-            {
-                userid = user.Id,
-                token = myToken
-            }, HttpContext.Request.Scheme, _configuration["Url Frontend"]);
-
-            return _mailHelper.SendMail(user.FullName, user.Email!,
-                $"WoofAdopciones - Confirmación de cuenta",
-                $"<h1>WoofAdopciones - Confirmación de cuenta</h1>" +
-                $"<p>Para habilitar el usuario, por favor hacer clic 'Confirmar Email':</p>" +
-                $"<b><a href ={tokenLink}>Confirmar Email</a></b>");
         }
 
         private TokenDTO BuildToken(User user)
@@ -284,6 +295,22 @@ namespace WoofAdopciones.Backend.Controllers
                 Token = new JwtSecurityTokenHandler().WriteToken(token),
                 Expiration = expiration
             };
+        }
+
+        private async Task<Response<string>> SendConfirmationEmailAsync(User user)
+        {
+            var myToken = await _userHelper.GenerateEmailConfirmationTokenAsync(user);
+            var tokenLink = Url.Action("ConfirmEmail", "accounts", new
+            {
+                userid = user.Id,
+                token = myToken
+            }, HttpContext.Request.Scheme, _configuration["Url Frontend"]);
+
+            return _mailHelper.SendMail(user.FullName, user.Email!,
+                $"Orders - Confirmación de cuenta",
+                $"<h1>Orders - Confirmación de cuenta</h1>" +
+                $"<p>Para habilitar el usuario, por favor hacer clic 'Confirmar Email':</p>" +
+                $"<b><a href ={tokenLink}>Confirmar Email</a></b>");
         }
     }
 }

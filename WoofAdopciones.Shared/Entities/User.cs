@@ -32,7 +32,7 @@ namespace WoofAdopciones.Shared.Entities
         [Display(Name = "Tipo de usuario")]
         public UserType UserType { get; set; }
 
-        public City? City { get; set; }
+        public City? City { get; set; } = null!;
 
         [Display(Name = "Ciudad")]
         [Range(1, int.MaxValue, ErrorMessage = "Debes seleccionar una {0}.")]
@@ -40,5 +40,18 @@ namespace WoofAdopciones.Shared.Entities
 
         [Display(Name = "Usuario")]
         public string FullName => $"{FirstName} {LastName}";
+
+        [Display(Name = "Dirección")]
+        public string FullAddress
+        {
+            get
+            {
+                var fullAddress = Address;
+                if (City != null && City!.Name != null) fullAddress += $", {City.Name}";
+                if (City != null && City!.State != null && City!.State!.Name != null) fullAddress += $", {City.State.Name}";
+                if (City != null && City!.State != null && City!.State!.Country != null && City!.State!.Country!.Name != null) fullAddress += $", {City.State.Country.Name}";
+                return fullAddress;
+            }
+        }
     }
 }

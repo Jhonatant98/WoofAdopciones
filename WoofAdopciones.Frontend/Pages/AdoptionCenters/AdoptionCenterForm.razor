@@ -1,0 +1,92 @@
+﻿<NavigationLock OnBeforeInternalNavigation="OnBeforeInternalNavigation"></NavigationLock>
+
+<EditForm EditContext="editContext" OnValidSubmit="OnValidSubmit">
+    <DataAnnotationsValidator />
+<div class="card-body">
+            <div class="row">
+                <div class="col-6">
+                    <div class="mb-3">
+                        <label>Nombre:</label>
+                        <div>
+                            <InputText class="form-control" @bind-Value="@AdoptionCenter.Name" />
+                            <ValidationMessage For="@(() => AdoptionCenter.Name)" />
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label>Sede:</label>
+                        <div>
+                            <InputText class="form-control" @bind-Value="@AdoptionCenter.NameCampus" />
+                            <ValidationMessage For="@(() => AdoptionCenter.NameCampus)" />
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label>Nit o Rut:</label>
+                        <div>
+                            <InputText class="form-control" @bind-Value="@AdoptionCenter.Document" />
+                            <ValidationMessage For="@(() => AdoptionCenter.Document)" />
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label>Dirección:</label>
+                        <div>
+                            <InputText class="form-control" @bind-Value="@AdoptionCenter.Address" />
+                            <ValidationMessage For="@(() => AdoptionCenter.Address)" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="mb-3">
+                        <label>País:</label>
+                        <div>
+                            <select class="form-select" @onchange="CountryChangedAsync">
+                                <option value="0">-- Seleccione un país --</option>
+                                @if (countries is not null)
+                                {
+                                    @foreach (var country in countries)
+                                    {
+                                        <option value="@country.Id">@country.Name</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label>Estado/Departamento:</label>
+                        <div>
+                            <select class="form-select" @onchange="StateChangedAsync">
+                                <option value="0">-- Seleccione un estado/departamento --</option>
+                                @if (states is not null)
+                                {
+                                    @foreach (var state in states)
+                                    {
+                                        <option value="@state.Id">@state.Name</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label>Ciudad:</label>
+                        <div>
+                            <select class="form-select" @bind="AdoptionCenter.CityId">
+                                <option value="0">-- Seleccione una ciudad --</option>
+                                @if (cities is not null)
+                                {
+                                    @foreach (var city in cities)
+                                    {
+                                        <option value="@city.Id">@city.Name</option>
+                                    }
+                                }
+                            </select>
+                            <ValidationMessage For="@(() => AdoptionCenter.CityId)" />
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <InputImg Label="Foto" ImageSelected="ImageSelected" ImageURL="@imageUrl" />
+                    </div>
+                </div>
+            </div>
+    </div>
+    <button class="btn btn-primary" type="submit">Guardar Cambios</button>
+    <button class="btn btn-success" @onclick="ReturnAction">Regresar</button>
+</EditForm>
