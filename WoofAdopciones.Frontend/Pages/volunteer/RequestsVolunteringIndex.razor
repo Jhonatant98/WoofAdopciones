@@ -1,0 +1,51 @@
+﻿@page "/RequestsVolunteering"
+@using WoofAdopciones.Frontend.Helpers;
+
+<h3>Voluntariados</h3>
+
+<AuthorizeView Roles="User">
+    <Authorized>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="/RequestVolunteering/create">
+                <a href="/RequestVolunteering/create" class="btn btn-primary mt-3">Nueva Solicitud</a>
+
+            </NavLink>
+        </div>
+    </Authorized>
+</AuthorizeView>
+
+
+<GenericList MyList="RequestsVoluntering">
+    <Body>
+
+       
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Descripción del voluntariado</th>
+                            <th>Estado</th>
+                            <th style="width:168px"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                @foreach (var requestVoluntering in RequestsVoluntering!)
+                        {
+                            <tr>
+                                <td>
+                            @requestVoluntering.Description
+                                </td>
+                        <td>
+                            @EnumHelper.GetEnumDescription(requestVoluntering.RequestStauts)
+                        </td>
+                                
+                        <td>
+                            <a href="/RequestVolunteering/RequestVolunteringDetails/@requestVoluntering.Id" class="btn btn-info btn-sm"><i class="oi oi-info" /> Detalles</a>
+                        </td>
+                       
+                    </tr>
+
+            }
+            </tbody>
+        </table>
+    </Body>
+</GenericList>

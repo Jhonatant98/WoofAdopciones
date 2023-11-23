@@ -63,6 +63,27 @@
                 </div>
             </Authorized>
         </AuthorizeView>
+
+                <AuthorizeView Roles="Admin">
+            <Authorized>
+                <div class="nav-item px-3">
+                <NavLink class="nav-link" href="/RequestsVolunteering">
+                        <span class="oi oi-dollar" aria-hidden="true"></span> Voluntariados
+                    </NavLink>
+                </div>
+            </Authorized>
+        </AuthorizeView>
+
+
+    <AuthorizeView Roles="User">
+        <Authorized>
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="/RequestsVolunteering">
+                    <span class="oi oi-dollar" aria-hidden="true"></span> Ver mis Voluntariados
+                </NavLink>
+            </div>
+        </Authorized>
+    </AuthorizeView>
 </div>
 
 @code {

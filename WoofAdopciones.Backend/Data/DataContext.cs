@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using WoofAdopciones.Shared.Entites;
 using WoofAdopciones.Shared.Entities;
 
 namespace WoofAdopciones.Backend.Data
@@ -17,6 +18,7 @@ namespace WoofAdopciones.Backend.Data
         public DbSet<State> States { get; set; }
         public DbSet<Adoption> Adoptions { get; set; }
 
+        public DbSet<RequestVolunteering> RequestVolunteering { get; set; }
 
         public DbSet<Complaint> Complaints { get; set; }
 
