@@ -15,7 +15,7 @@ namespace WoofAdopciones.Shared.Entities
         [Range(0, 100, ErrorMessage = "La {0} debe estar entre {1} y {2} años.")]
         public int Age { get; set; }
 
-        public string Color { get; set; } = null!;
+        public string? Color { get; set; } = null!;
 
         [DataType(DataType.MultilineText)]
         [Display(Name = "Descripción")]

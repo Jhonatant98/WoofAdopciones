@@ -1,12 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using WoofAdopciones.Backend.Data;
 using WoofAdopciones.Backend.UnitsOfWork;
 using WoofAdopciones.Shared.DTOs;
 using WoofAdopciones.Shared.Entities;
-using WoofAdopciones.Shared.Helpers;
 
 namespace WoofAdopciones.Backend.Controllers
 {

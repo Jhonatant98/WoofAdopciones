@@ -8,8 +8,7 @@ namespace WoofAdopciones.Shared.Entities
 
         [Display(Name = "Nit")]
         [MaxLength(20, ErrorMessage = "El campo {0} debe tener máximo {1} caractéres.")]
-        [Required(ErrorMessage = "El campo {0} es obligatorio.")]
-        public string Document { get; set; } = null!;
+        public string? Document { get; set; } = null!;
 
         [Display(Name = "Nombre")]
         [MaxLength(300, ErrorMessage = "El campo {0} debe tener máximo {1} caractéres.")]
@@ -18,13 +17,11 @@ namespace WoofAdopciones.Shared.Entities
 
         [Display(Name = "Sede")]
         [MaxLength(300, ErrorMessage = "El campo {0} debe tener máximo {1} caractéres.")]
-        [Required(ErrorMessage = "El campo {0} es obligatorio.")]
-        public string NameCampus { get; set; } = null!;
+        public string? NameCampus { get; set; } = null!;
 
         [Display(Name = "Dirección")]
         [MaxLength(200, ErrorMessage = "El campo {0} debe tener máximo {1} caractéres.")]
-        [Required(ErrorMessage = "El campo {0} es obligatorio.")]
-        public string Address { get; set; } = null!;
+        public string? Address { get; set; } = null!;
 
         [Display(Name = "Logo")]
         public string? Photo { get; set; }

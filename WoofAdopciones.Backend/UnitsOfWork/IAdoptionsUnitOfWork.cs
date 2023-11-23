@@ -1,6 +1,5 @@
 ﻿using WoofAdopciones.Shared.DTOs;
 using WoofAdopciones.Shared.Entities;
-using WoofAdopciones.Shared.Entities;
 using WoofAdopciones.Shared.Responses;
 
 namespace WoofAdopciones.Backend.UnitsOfWork
