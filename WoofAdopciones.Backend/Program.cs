@@ -71,7 +71,6 @@ builder.Services.AddScoped<ICountriesRepository, CountriesRepository>();
 builder.Services.AddScoped<IStatesRepository, StatesRepository>();
 
 builder.Services.AddScoped<IAdoptionCenterRepository, AdoptionCenterRepository>();
-builder.Services.AddScoped<IOrderTypeRepository, OrderTypeRepository>();
 builder.Services.AddScoped<IPetsRepository, PetsRepository>();
 builder.Services.AddScoped<IUsersRepository, UsersRepository>();
 builder.Services.AddScoped<IAdoptionsRepository, AdoptionsRepository>();
@@ -80,7 +79,6 @@ builder.Services.AddScoped<IAdoptionsRepository, AdoptionsRepository>();
 builder.Services.AddScoped<ICitiesUnitOfWork, CitiesUnitOfWork>();
 builder.Services.AddScoped<ICountriesUnitOfWork, CountriesUnitOfWork>();
 builder.Services.AddScoped<IStatesUnitOfWork, StatesUnitOfWork>();
-builder.Services.AddScoped<IOrderTypeUnitOfWork, OrderTypeUnitOfWork>();
 builder.Services.AddScoped<IPetsUnitOfWork, PetsUnitOfWork>();
 builder.Services.AddScoped<IAdoptionCenterUnitOfWork, AdoptionCenterUnitOfWork>();
 builder.Services.AddScoped<IUsersUnitOfWork, UsersUnitOfWork>();

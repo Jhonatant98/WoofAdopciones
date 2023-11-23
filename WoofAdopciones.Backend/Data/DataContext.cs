@@ -11,7 +11,6 @@ namespace WoofAdopciones.Backend.Data
         }
 
         public DbSet<Pet> Pets { get; set; }
-        public DbSet<OrderType> OrderTypes { get; set; }
         public DbSet<AdoptionCenter> AdoptionCenters { get; set; }
         public DbSet<City> Cities { get; set; }
         public DbSet<Country> Countries { get; set; }
@@ -25,7 +24,6 @@ namespace WoofAdopciones.Backend.Data
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<AdoptionCenter>().HasIndex(c => c.Name).IsUnique();
-            modelBuilder.Entity<OrderType>().HasIndex(c => c.Name).IsUnique();
             modelBuilder.Entity<Country>().HasIndex(c => c.Name).IsUnique();
             modelBuilder.Entity<State>().HasIndex(s => new { s.Name, s.CountryId }).IsUnique();
             modelBuilder.Entity<City>().HasIndex(c => new { c.Name, c.StateId }).IsUnique();

@@ -31,7 +31,6 @@ namespace WoofAdopciones.Backend.Data
             await _context.Database.EnsureCreatedAsync();
             //await CheckCountriesAsync();
             await CheckCountriesAsync2();
-            await CheckOrderTypeAsync();
             await CheckAdoptionCenterAsync();
             await CheckPetsAsync();
             await CheckRolesAsync();
@@ -174,23 +173,6 @@ namespace WoofAdopciones.Backend.Data
             await _userHelper.CheckRoleAsync(UserType.User.ToString());
         }
 
-        private async Task CheckOrderTypeAsync()
-        {
-            if (!_context.OrderTypes.Any())
-            {
-                _context.OrderTypes.Add(new OrderType { Name = "Voluntario A" });
-                _context.OrderTypes.Add(new OrderType { Name = "Apadrinar" });
-                _context.OrderTypes.Add(new OrderType { Name = "Odopción" });
-                _context.OrderTypes.Add(new OrderType { Name = "Donación Dinero" });
-                _context.OrderTypes.Add(new OrderType { Name = "Denuncia" });
-                _context.OrderTypes.Add(new OrderType { Name = "Devolución " });
-                _context.OrderTypes.Add(new OrderType { Name = "Donacion consentrado" });
-                _context.OrderTypes.Add(new OrderType { Name = "Perdida" });
-                _context.OrderTypes.Add(new OrderType { Name = "Entrega Responsable" });
-                _context.OrderTypes.Add(new OrderType { Name = "Voluntario B" });
-                await _context.SaveChangesAsync();
-            }
-        }
         private async Task CheckCountriesAsync()
         {
            if (!_context.Countries.Any())

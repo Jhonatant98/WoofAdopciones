@@ -101,7 +101,7 @@ namespace WoofAdopciones.Backend.Repositories
                 return new Response<Adoption>
                 {
                     WasSuccess = false,
-                    Message = "Pedido no existe"
+                    Message = "Adopción no existe"
                 };
             }
 
