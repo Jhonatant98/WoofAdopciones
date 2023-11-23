@@ -1,0 +1,51 @@
+﻿@page "/RequestVolunteering/RequestVolunteringDetails/{volunteringId:int}"
+
+@if (requestVolunteering is null)
+{
+    <Loading />
+}
+else
+{
+
+    <div class="card">
+        <div class="card-header">
+            <span>
+                <i class="bi bi-paw"></i> Descripción del voluntariado : @requestVolunteering.Description
+                @if (requestVolunteering.RequestStauts == RequestStatusVolunteering.Sent)
+                {
+                    <AuthorizeView Roles="Admin">
+                        <Authorized>
+                            <button class="btn btn-sm btn-primary float-end mx-2" @onclick=@(() => ReviewVolunteringAsync())><i class="oi oi-external-link" /> Revisar</button>
+                        </Authorized>
+                    </AuthorizeView>
+                }
+                <AuthorizeView Roles="Admin">
+                    <Authorized>
+                        @if (requestVolunteering.RequestStauts == RequestStatusVolunteering.Review)
+                        {
+                            <button class="btn btn-sm btn-warning float-end mx-2" @onclick=@(() => ApprovedVolunteringSync())><i class="oi oi-location" /> Aprobada</button>
+                            <button class="btn btn-sm btn-warning float-end mx-2" @onclick=@(() => RejectVolunteringAsync())><i class="oi oi-location" /> Rechazada</button>
+
+                        }
+
+                    </Authorized>
+                </AuthorizeView>
+                <a class="btn btn-sm btn-success float-end" href="/RequestsVolunteering"><i class="oi oi-arrow-thick-left" /> Regresar</a>
+            </span>
+        </div>
+        <div class="row mx-2 my-2">
+            <div class="col-2">
+                <p>Solicitante</p>
+                <p>Documento</p>
+                <p>Teléfono</p>
+                <p>Email</p>
+            </div>
+            <div class="col-4">
+                <p><strong>@requestVolunteering.User.FullName</strong></p>
+                <p><strong>@requestVolunteering.User.Document</strong></p>
+                <p><strong>@requestVolunteering.User.PhoneNumber</strong></p>
+                <p><strong>@requestVolunteering.User.UserName</strong></p>
+            </div>
+        </div>
+    </div>
+}

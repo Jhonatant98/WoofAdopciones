@@ -41,6 +41,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="Pages\volunteer\RequestsVolunteringIndex.razor" />
+    <None Include="Pages\volunteer\RequestVolunteringCreate.razor" />
+    <None Include="Pages\volunteer\RequestVolunteringDetails.razor" />
+    <None Include="Pages\volunteer\RequestVolunteringForm.razor" />
     <None Include="Shared\CarouselView.razor" />
   </ItemGroup>
 
