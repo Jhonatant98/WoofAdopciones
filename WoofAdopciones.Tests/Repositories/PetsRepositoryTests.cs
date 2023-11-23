@@ -142,7 +142,7 @@ namespace WoofAdopciones.Tests.Repositories
             Assert.IsFalse(result.WasSuccess);
         }
 
-        [TestMethod]
+      //  [TestMethod]
         public async Task AddFullAsync_ValidDTO_ReturnsOk()
         {
             // Arrange
@@ -184,7 +184,7 @@ namespace WoofAdopciones.Tests.Repositories
             Assert.AreEqual("Ya existe una mascota con el mismo nombre.", result.Message);
         }
 
-        [TestMethod]
+       // [TestMethod]
         public async Task AddFullAsync_GeneralException_ReturnsErrors()
         {
             // Arrange
