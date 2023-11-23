@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WoofAdopciones.Backend", "W
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WoofAdopciones.Frontend", "WoofAdopciones.Frontend\WoofAdopciones.Frontend.csproj", "{C120276C-7AB1-41B7-A72E-8AE9B883C697}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WoofAdopciones.Tests", "WoofAdopciones.Tests\WoofAdopciones.Tests.csproj", "{CAFCD233-94DB-4186-97A7-ED97207A2717}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WoofAdopciones.Tests", "WoofAdopciones.Tests\WoofAdopciones.Tests.csproj", "{CAFCD233-94DB-4186-97A7-ED97207A2717}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

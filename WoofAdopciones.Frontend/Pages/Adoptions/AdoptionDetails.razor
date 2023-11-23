@@ -13,10 +13,10 @@ else
                 <i class="bi bi-paw"></i> @adoption.Pet.Name
                         @if (adoption.AdoptionStatus == AdoptionStatus.InReview)
                         {
-                            <button class="btn btn-sm btn-danger float-end mx-2" @onclick=@(() => CancelOrderAsync())><i class="oi oi-trash" /> Cancelar</button>
+                            <button class="btn btn-sm btn-danger float-end mx-2" @onclick=@(() => CancelOrderAsync())><i class="oi oi-trash" /> Rechazar</button>
                             <AuthorizeView Roles="Admin">
                                 <Authorized>
-                                    <button class="btn btn-sm btn-primary float-end mx-2" @onclick=@(() => DispatchOrderAsync())><i class="oi oi-external-link" /> Despachar</button>
+                            <button class="btn btn-sm btn-primary float-end mx-2" @onclick=@(() => DispatchOrderAsync())><i class="oi oi-external-link" /> Visita al hogar</button>
                                 </Authorized>
                             </AuthorizeView>
                         }
@@ -24,7 +24,7 @@ else
                             <Authorized>
                                 @if (adoption.AdoptionStatus == AdoptionStatus.GoHome)
                                 {
-                                    <button class="btn btn-sm btn-warning float-end mx-2" @onclick=@(() => SendOrderAsync())><i class="oi oi-location" /> Enviar</button>
+                                    <button class="btn btn-sm btn-warning float-end mx-2" @onclick=@(() => SendOrderAsync())><i class="oi oi-location" /> Aprobar</button>
                                 }
                                 
                             </Authorized>

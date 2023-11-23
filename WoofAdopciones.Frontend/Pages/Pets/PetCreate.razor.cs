@@ -33,7 +33,7 @@ namespace WoofAdopciones.Frontend.Pages.Pets
 
         private async Task CreateAsync()
         {
-            var response = await repository.PostAsync("/api/Pets", petDTO);
+            var response = await repository.PostAsync("/api/Pets/full", petDTO);
             if (response.Error)
             {
                 var message = await response.GetErrorMessageAsync();

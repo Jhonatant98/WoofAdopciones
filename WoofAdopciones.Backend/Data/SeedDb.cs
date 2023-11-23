@@ -37,6 +37,8 @@ namespace WoofAdopciones.Backend.Data
             await CheckRolesAsync();
             await CheckUserAsync("1010", "Jhonatan", "Wirbiezcas", "jhonatan@yopmail.com", "300 594 3458", "Bello", UserType.Admin);
             await CheckUserAsync("1011", "Juan Diego", "Gil", "JuanDiego@yopmail.com", "313 548 2252", "La Raya", UserType.Admin);
+            await CheckUserAsync("1011", "Juan Diego", "Gil", "JuanDiego@yopmail.com", "313 548 2252", "La Raya", UserType.Admin);
+
         }
 
 

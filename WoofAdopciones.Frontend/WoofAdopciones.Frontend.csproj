@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="Shared\CarouselView.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Azure.Storage.Blobs" Version="12.18.0" />
     <PackageReference Include="Blazored.Modal" Version="7.1.0" />
     <PackageReference Include="CurrieTechnologies.Razor.SweetAlert2" Version="5.5.0" />
@@ -29,6 +33,15 @@
 
   <ItemGroup>
     <_ContentIncludedByDefault Remove="Pages\Auth\UserIndex.razor" />
+    <_ContentIncludedByDefault Remove="Shared\CarouselView.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Shared\CarouselView.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Shared\CarouselView.razor" />
   </ItemGroup>
 
 </Project>

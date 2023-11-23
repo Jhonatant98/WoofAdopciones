@@ -9,6 +9,7 @@ using WoofAdopciones.Frontend.AuthenticationProviders;
 using WoofAdopciones.Frontend.Repositories;
 using WoofAdopciones.Frontend.Services;
 
+
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");

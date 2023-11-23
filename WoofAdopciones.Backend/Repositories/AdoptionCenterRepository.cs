@@ -18,7 +18,11 @@ namespace WoofAdopciones.Backend.Repositories
 
         public override async Task<Response<IEnumerable<AdoptionCenter>>> GetAsync(PaginationDTO pagination)
         {
-            var queryable = _context.AdoptionCenters.AsQueryable();
+            var queryable = _context.AdoptionCenters
+                .Include(u => u.City!)
+                .ThenInclude(c => c.State!)
+                .ThenInclude(s => s.Country)
+                .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(pagination.Filter))
             {
@@ -38,6 +42,9 @@ namespace WoofAdopciones.Backend.Repositories
         public async Task<IEnumerable<AdoptionCenter>> GetComboAsync()
         {
             return await _context.AdoptionCenters
+                .Include(u => u.City!)
+                .ThenInclude(c => c.State!)
+                .ThenInclude(s => s.Country)
                 .OrderBy(c => c.Name)
                 .ToListAsync();
         }

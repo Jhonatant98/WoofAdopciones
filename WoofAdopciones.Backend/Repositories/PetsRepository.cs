@@ -108,7 +108,7 @@ namespace WoofAdopciones.Backend.Repositories
                 foreach (var petImage in petDTO.PetImages!)
                 {
                     var photoPet = Convert.FromBase64String(petImage);
-                    newPet.PetImages.Add(new PetImage { Image = await _fileStorage.SaveFileAsync(photoPet, ".jpg", "pets") });
+                    newPet.PetImages.Add(new PetImage { Image = await _fileStorage.SaveFileAsync(photoPet, ".jpg", "users") });
                 }
 
                 _context.Add(newPet);
@@ -204,7 +204,7 @@ namespace WoofAdopciones.Backend.Repositories
                 if (!imageDTO.Images[i].StartsWith("https://"))
                 {
                     var photoPet = Convert.FromBase64String(imageDTO.Images[i]);
-                    imageDTO.Images[i] = await _fileStorage.SaveFileAsync(photoPet, ".jpg", "products");
+                    imageDTO.Images[i] = await _fileStorage.SaveFileAsync(photoPet, ".jpg", "users");
                     pet.PetImages!.Add(new PetImage { Image = imageDTO.Images[i] });
                 }
             }

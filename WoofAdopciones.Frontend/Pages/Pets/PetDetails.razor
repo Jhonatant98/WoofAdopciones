@@ -1,5 +1,51 @@
-﻿<h3>PetDetails</h3>
+﻿@page "/pets/details/{PetId:int}"
 
-@code {
-
+@if (loading)
+{
+    <Loading />
+}
+else
+{
+    <div class="card">
+        <div class="card-header">
+            <span>
+                <i class="oi oi-star" /> @pet!.Name
+                <a class="btn btn-sm btn-success float-end" href="/"><i class="oi oi-arrow-thick-left" /> Regresar</a>
+            </span>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-6">
+                    <div class="mb-3">
+                        <label>Nombre:</label>
+                        <div>
+                            <b>@pet.Name</b>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label>Descripción:</label>
+                        <div>
+                            <b>@pet.Description</b>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label>Color:</label>
+                        <div>
+                            <b>@pet.Color</b>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label>Edad:</label>
+                        <div>
+                            <b>@pet.Age</b>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <button class="btn btn-sm btn-primary" @onclick=@(() => AddToCartAsync(pet))><i class="oi oi-plus" /> Adoptar </button>
+                </div>
+            </div>
+            <CarouselView Images="images" />
+        </div>
+    </div>
 }
