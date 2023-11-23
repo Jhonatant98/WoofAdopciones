@@ -32,7 +32,7 @@ namespace WoofAdopciones.Shared.Entities
         public ICollection<PetImage>? PetImages { get; set; }
 
         [Display(Name = "Imágenes")]
-        public int ProductImagesNumber => PetImages == null || PetImages.Count == 0 ? 0 : PetImages.Count;
+        public int PetImagesNumber => PetImages == null || PetImages.Count == 0 ? 0 : PetImages.Count;
 
         [Display(Name = "Imagén")]
         public string MainImage => PetImages == null || PetImages.Count == 0 ? string.Empty : PetImages.FirstOrDefault()!.Image;

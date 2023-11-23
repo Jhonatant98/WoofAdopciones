@@ -4,7 +4,8 @@ using WoofAdopciones.Shared.Responses;
 using WoofAdopciones.Backend.Services;
 using WoofAdopciones.Shared.Enums;
 using WoofAdopciones.Backend.Helpers;
-
+using System.Runtime.InteropServices;
+using System.Reflection.Metadata;
 
 namespace WoofAdopciones.Backend.Data
 {
@@ -31,6 +32,8 @@ namespace WoofAdopciones.Backend.Data
             //await CheckCountriesAsync();
             await CheckCountriesAsync2();
             await CheckOrderTypeAsync();
+            await CheckAdoptionCenterAsync();
+            await CheckPetsAsync();
             await CheckRolesAsync();
             await CheckUserAsync("1010", "Jhonatan", "Wirbiezcas", "jhonatan@yopmail.com", "300 594 3458", "Bello", UserType.Admin);
             await CheckUserAsync("1011", "Juan Diego", "Gil", "JuanDiego@yopmail.com", "313 548 2252", "La Raya", UserType.Admin);
@@ -63,7 +66,53 @@ namespace WoofAdopciones.Backend.Data
             }
         }
 
+        private async Task CheckPetsAsync()
+        {
+            var adoptionCenter = await _context.AdoptionCenters.FirstOrDefaultAsync();
 
+
+            if (!_context.Pets.Any())
+            {
+                await AddPetAsync("Polo", "Blanco", 13, new List<string>() { "polo.png" },adoptionCenter);
+                await AddPetAsync("Nemo", "Negro", 13, new List<string>() { "nemo.png" }, adoptionCenter);
+                await AddPetAsync("Matias", "cade", 13, new List<string>() { "matias.png" }, adoptionCenter);
+                await AddPetAsync("Betoben", "cade", 13, new List<string>() { "betoben.png" }, adoptionCenter);
+
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        private async Task AddPetAsync(string name, string color, int age, List<string> images,AdoptionCenter adoptionCenter )
+        {
+            Pet pet = new()
+            {
+                Description = name,
+                Name = name,
+                Color = color,
+                Age = age,
+                PetImages = new List<PetImage>(),
+                AdoptionCenterId = adoptionCenter.Id,
+            };
+
+
+            foreach (string? image in images)
+            {
+                string filePath;
+                if (_runtimeInformationWrapper.IsOSPlatform(OSPlatform.Windows))
+                {
+                    filePath = $"{Environment.CurrentDirectory}\\Images\\pets\\{image}";
+                }
+                else
+                {
+                    filePath = $"{Environment.CurrentDirectory}/Images/pets/{image}";
+                }
+                var fileBytes = File.ReadAllBytes(filePath);
+                var imagePath = await _fileStorage.SaveFileAsync(fileBytes, "jpg", "pets");
+                pet.PetImages.Add(new PetImage { Image = imagePath });
+            }
+
+            _context.Pets.Add(pet);
+        }
         private async Task<User> CheckUserAsync(string document, string firstName, string lastName, string email, string phone, string address, UserType userType)
         {
             var user = await _userHelper.GetUserAsync(email);
@@ -95,6 +144,28 @@ namespace WoofAdopciones.Backend.Data
             }
 
             return user;
+        }
+
+        private async Task CheckAdoptionCenterAsync()
+        {
+            var city = await _context.Cities.FirstOrDefaultAsync(x => x.Name == "Medellín");
+            if (city == null)
+            {
+                city = await _context.Cities.FirstOrDefaultAsync();
+            }
+            if (!_context.AdoptionCenters.Any())
+            {
+                _context.AdoptionCenters.Add(new AdoptionCenter {
+                    Name = "Huellas limpias",
+                    Document = "87612777",
+                    NameCampus = "Sabaneta",
+                    Address = "CL 45 34 - 34",
+                    City = city
+
+                });
+               
+                await _context.SaveChangesAsync();
+            }
         }
 
         private async Task CheckRolesAsync()

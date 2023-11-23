@@ -12,9 +12,9 @@ namespace WoofAdopciones.Backend.Services
         public ApiService(IConfiguration configuration, HttpClient client)
         {
             _client = client;
-            _client.BaseAddress = new Uri(configuration["CoutriesBackend:urlBase"]!);
-            _tokenName = configuration["CoutriesBackend:tokenName"]!;
-            _tokenValue = configuration["CoutriesBackend:tokenValue"]!;
+            _client.BaseAddress = new Uri(configuration["CoutriesAPI:urlBase"]!);
+            _tokenName = configuration["CoutriesAPI:tokenName"]!;
+            _tokenValue = configuration["CoutriesAPI:tokenValue"]!;
         }
 
         private JsonSerializerOptions _jsonDefaultOptions => new JsonSerializerOptions
